@@ -14,6 +14,7 @@ export default function Layout() {
             </NavLink>
             <NavLink to="/sensitivity">Sensitivity</NavLink>
             <NavLink to="/compare">Compare</NavLink>
+            <NavLink to="/explore/insecticide-resistance">Explore</NavLink>
           </nav>
         </div>
       </header>

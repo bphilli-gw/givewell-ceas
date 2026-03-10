@@ -103,11 +103,61 @@ export interface LeverageFungingData {
   counterfactual_global_fund: number;
 }
 
+export interface InsecticideResistanceData {
+  proportion_effect_without_chemical: number;
+  proportion_effect_without_physical: number;
+  coeff_x_squared: number;
+  coeff_x: number;
+  y_intercept: number;
+  avg_pyrethroid_mortality_rate: number;
+  avg_bioassay_year: number;
+  expected_distribution_year: number;
+  annual_mortality_change: number;
+  avg_pbo_mortality_rate: number;
+  avg_pyrethroid_only_mortality: number;
+  pbo_washout_year1: number;
+  pbo_washout_year2: number;
+  pbo_washout_year3: number;
+  chlorfenapyr_adj_year1: number;
+  chlorfenapyr_adj_year2: number;
+  chlorfenapyr_adj_year3: number;
+  pct_pbo_nets: number;
+  pct_chlorfenapyr_nets: number;
+  pct_other_dual_ai_nets: number;
+  pct_standard_itns: number;
+}
+
+export interface DurabilityPhysicalData {
+  year1_severe: number;
+  year1_moderate: number;
+  year1_good: number;
+  year2_severe: number;
+  year2_moderate: number;
+  year2_good: number;
+  year3_severe: number;
+  year3_moderate: number;
+  year3_good: number;
+}
+
+export interface DurabilityChemicalData {
+  effect_retained_severe: number;
+  effect_retained_moderate: number;
+  effect_retained_good: number;
+  physical_decay_rate_ctn_vs_itn: number;
+  pyrethroid_remaining_ctn_year1: number;
+  pyrethroid_remaining_std_year1: number;
+  pyrethroid_remaining_std_year2: number;
+  pyrethroid_remaining_std_year3: number;
+}
+
 export interface ITNInputs {
   country: string;
   cost: CostData;
   net_distribution: NetDistributionData;
   population: PopulationData;
+  durability_physical: DurabilityPhysicalData;
+  durability_chemical: DurabilityChemicalData;
+  insecticide_resistance: InsecticideResistanceData;
   net_retention: NetRetentionData;
   efficacy: EfficacyData;
   incidence: IncidenceData;
@@ -120,12 +170,26 @@ export interface ITNInputs {
 /** Pre-computed supplementary sheet results */
 export interface SupplementaryResults {
   durability: {
-    combined_protection: number[];
+    physical_protection: number[];
     physical_protection_adjusted: number;
+    chemical_protection_ctn_yr1: number;
+    chemical_protection: number[];
+    physical_share: number;
+    chemical_share: number;
+    joint_share: number;
+    combined_protection: number[];
+    attribution_yr1: number[];
+    attribution_yr2: number[];
+    attribution_yr3: number[];
   };
   insecticide_resistance: {
-    weighted_adj: number[];
+    projected_mortality: number;
+    killing_power_loss: number;
+    standard_adj: number[];
     pbo_adj: number[];
+    chlorfenapyr_adj: number[];
+    dual_ai_adj: number[];
+    weighted_adj: number[];
   };
   malaria_mortality: {
     baseline_mortality_rate: number;

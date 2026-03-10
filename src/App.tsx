@@ -4,6 +4,7 @@ import Overview from './pages/Overview';
 import CountryDetail from './pages/CountryDetail';
 import Sensitivity from './pages/Sensitivity';
 import Compare from './pages/Compare';
+import ExploreIR from './pages/ExploreIR';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="country/:id" element={<CountryDetail />} />
           <Route path="sensitivity" element={<Sensitivity />} />
           <Route path="compare" element={<Compare />} />
+          <Route path="explore/insecticide-resistance" element={<ExploreIR />} />
         </Route>
       </Routes>
     </BrowserRouter>

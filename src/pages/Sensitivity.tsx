@@ -36,14 +36,6 @@ const SWEEP_PARAMS: SweepParam[] = [
   { key: 'proportion_used', label: 'ITN Usage Rate', path: ['net_distribution', 'proportion_used'], defaultRange: [0.3, 1.0], format: 'percent' },
 ];
 
-function getNestedValue(obj: Record<string, unknown>, path: string[]): number {
-  let current: unknown = obj;
-  for (const key of path) {
-    current = (current as Record<string, unknown>)[key];
-  }
-  return current as number;
-}
-
 function setNestedValue(obj: Record<string, unknown>, path: string[], value: number): Record<string, unknown> {
   const result = { ...obj };
   if (path.length === 1) {
@@ -265,8 +257,8 @@ export default function Sensitivity() {
                 />
                 <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
                 <Tooltip
-                  formatter={(val: number) => [val, 'Simulations']}
-                  labelFormatter={(v: number) => `CE ≈ ${Number(v).toFixed(2)}x`}
+                  formatter={((val: number) => [val, 'Simulations']) as any}
+                  labelFormatter={((v: number) => `CE ≈ ${Number(v).toFixed(2)}x`) as any}
                 />
                 <ReferenceLine
                   x={tornadoCountry?.results.final_ce_multiple ?? 0}
@@ -312,7 +304,7 @@ export default function Sensitivity() {
                 />
                 <YAxis type="category" dataKey="param" width={150} tick={{ fontSize: 13 }} />
                 <Tooltip
-                  formatter={(val: number) => `${val > 0 ? '+' : ''}${val.toFixed(1)}%`}
+                  formatter={((val: number) => `${val > 0 ? '+' : ''}${val.toFixed(1)}%`) as any}
                 />
                 <ReferenceLine x={0} stroke="#666" />
                 <Bar dataKey="low" fill="#ef4444" name="Low end" stackId="a" />

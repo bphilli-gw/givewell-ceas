@@ -24,8 +24,15 @@ from src.models.itn.counterfactual_malaria import calculate_malaria_mortality
 from src.models.itn.coverage import calculate_coverage, RoutineFallback
 from src.models.itn.leverage_funging import calculate_leverage_funging
 from src.models.itn.main_cea import calculate_main_cea
+from src.models.itn.mc_config import build_mc_config
+from src.models.itn.monte_carlo import run_simple_monte_carlo, MCStats
+from src.models.itn.sensitivity import run_sensitivity_analysis
 
 DATA_DIR = CEA_REPO / "data" / "extracted"
+CI_JSON = DATA_DIR / "Confidence_intervals.json"
+MC_SIMULATIONS = 5000
+MC_SEED = 42
+HISTOGRAM_BINS = 40
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "public" / "data"
 
 
@@ -140,6 +147,93 @@ def compute_country(loader, col, drc_fallback, global_phys_adj):
     }
 
 
+def compute_monte_carlo(col: str, country_name: str, ce_multiple: float) -> dict | None:
+    """Run Monte Carlo simulation and OAT sensitivity for a country.
+
+    The simple CEA produces raw absolute values (not CE multiples), so we
+    scale the draws by (ce_multiple / raw_mean) to convert to CE-multiple
+    space while preserving the distribution shape.
+
+    Returns a dict with summary stats, histogram bins, and tornado data,
+    or None if CI data is unavailable.
+    """
+    import numpy as np
+    from src.models.itn.monte_carlo import _compute_simple_ce
+
+    try:
+        config = build_mc_config(
+            CI_JSON, col, country_name,
+            n_simulations=MC_SIMULATIONS,
+            seed=MC_SEED,
+        )
+    except (ValueError, KeyError):
+        return None
+
+    if not config.parameters:
+        return None
+
+    mc_result = run_simple_monte_carlo(config)
+
+    # Compute scaling factor: convert raw CE values → CE multiples
+    # Use the best-guess raw value as the reference point
+    bg_values = {spec.name: spec.best_guess for spec in config.parameters}
+    bg_outcomes = _compute_simple_ce(bg_values)
+    bg_raw = bg_outcomes.get("final_cost_effectiveness", 0)
+
+    if abs(bg_raw) < 1e-15 or not ce_multiple:
+        return None
+
+    scale = ce_multiple / bg_raw
+
+    # Scale the raw draws to CE-multiple space
+    draws = mc_result.outcome_draws["final_cost_effectiveness"]
+    scaled_draws = draws * scale
+    finite = scaled_draws[np.isfinite(scaled_draws)]
+    if len(finite) == 0:
+        return None
+
+    # Compute summary stats from scaled draws
+    s = MCStats.from_array(finite)
+
+    # Build histogram from scaled draws
+    counts, edges = np.histogram(finite, bins=HISTOGRAM_BINS)
+    histogram = [
+        {"x0": round(float(edges[i]), 4), "x1": round(float(edges[i + 1]), 4), "count": int(counts[i])}
+        for i in range(len(counts))
+    ]
+
+    # OAT sensitivity — pct_delta values are scale-invariant so no conversion needed
+    sens_result = run_sensitivity_analysis(config, mc_result)
+    tornado = []
+    for entry in sens_result.tornado_data():
+        # Convert absolute means to CE multiples too
+        tornado.append({
+            "parameter": entry["parameter"],
+            "p25_pct_delta": round(entry.get("p25_pct_delta", 0), 6),
+            "p75_pct_delta": round(entry.get("p75_pct_delta", 0), 6),
+            "p25_mean": round(entry.get("p25_mean", 0) * scale, 4),
+            "p75_mean": round(entry.get("p75_mean", 0) * scale, 4),
+        })
+
+    return {
+        "n_simulations": mc_result.n_simulations,
+        "seed": mc_result.seed,
+        "summary": {
+            "mean": round(s.mean, 4),
+            "median": round(s.median, 4),
+            "std": round(s.std, 4),
+            "min": round(s.min, 4),
+            "max": round(s.max, 4),
+            "p5": round(s.p5, 4),
+            "p25": round(s.p25, 4),
+            "p75": round(s.p75, 4),
+            "p95": round(s.p95, 4),
+        },
+        "histogram": histogram,
+        "tornado": tornado,
+    }
+
+
 # Column letter -> display name (more specific than just country)
 COLUMN_DISPLAY_NAMES = {
     "I": "Chad",
@@ -188,8 +282,17 @@ def main():
             data = compute_country(loader, col, drc_fallback, global_phys_adj)
             data["display_name"] = display_name
             data["id"] = col.lower()
+
+            # Run Monte Carlo simulation
+            ce = data['results']['final_ce_multiple']
+            mc_data = compute_monte_carlo(col, display_name, ce)
+            data["monte_carlo"] = mc_data
+
             countries.append(data)
-            print(f"CE = {data['results']['final_ce_multiple']:.3f}x")
+            mc_info = ""
+            if mc_data:
+                mc_info = f" (MC: P5={mc_data['summary']['p5']:.2f}, P95={mc_data['summary']['p95']:.2f})"
+            print(f"CE = {ce:.3f}x{mc_info}")
         except Exception as e:
             print(f"ERROR: {e}")
             errors.append({"column": col, "name": display_name, "error": str(e)})

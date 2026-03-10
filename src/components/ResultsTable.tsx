@@ -50,6 +50,16 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
     return arr;
   }, [countries, sortKey, sortDir]);
 
+  // Compute the max P95 for scaling the uncertainty bars
+  const maxP95 = useMemo(() => {
+    let max = 0;
+    for (const c of countries) {
+      const p95 = c.monte_carlo?.summary.p95 ?? c.results.final_ce_multiple ?? 0;
+      if (p95 > max) max = p95;
+    }
+    return max;
+  }, [countries]);
+
   function handleSort(key: SortKey) {
     if (key === sortKey) {
       setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -76,6 +86,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
             <th className="clickable num" onClick={() => handleSort('final_ce_multiple')}>
               CE Multiple{sortIndicator('final_ce_multiple')}
             </th>
+            <th className="num">Uncertainty (P5–P95)</th>
             <th className="clickable num" onClick={() => handleSort('deaths_averted')}>
               Deaths Averted{sortIndicator('deaths_averted')}
             </th>
@@ -91,6 +102,9 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
           {sorted.map((c, i) => {
             const totalDeaths =
               (c.results.deaths_averted_under5 ?? 0) + (c.results.deaths_averted_over5 ?? 0);
+            const mc = c.monte_carlo;
+            const ce = c.results.final_ce_multiple ?? 0;
+
             return (
               <tr
                 key={c.id}
@@ -100,6 +114,42 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
                 <td className="rank-col">{i + 1}</td>
                 <td>{c.display_name}</td>
                 <td className="num highlight">{fmt(c.results.final_ce_multiple)}x</td>
+                <td className="num uncertainty-cell">
+                  {mc ? (
+                    <div className="uncertainty-bar-wrapper">
+                      <span className="uncertainty-range">
+                        {mc.summary.p5.toFixed(1)}–{mc.summary.p95.toFixed(1)}x
+                      </span>
+                      <div className="uncertainty-bar">
+                        {/* P5–P95 range (light) */}
+                        <div
+                          className="uncertainty-bar-outer"
+                          style={{
+                            left: `${(mc.summary.p5 / maxP95) * 100}%`,
+                            width: `${((mc.summary.p95 - mc.summary.p5) / maxP95) * 100}%`,
+                          }}
+                        />
+                        {/* P25–P75 range (dark) */}
+                        <div
+                          className="uncertainty-bar-inner"
+                          style={{
+                            left: `${(mc.summary.p25 / maxP95) * 100}%`,
+                            width: `${((mc.summary.p75 - mc.summary.p25) / maxP95) * 100}%`,
+                          }}
+                        />
+                        {/* Point estimate marker */}
+                        <div
+                          className="uncertainty-bar-point"
+                          style={{
+                            left: `${(ce / maxP95) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-muted">—</span>
+                  )}
+                </td>
                 <td className="num">{fmt(totalDeaths, 1)}</td>
                 <td className="num">{fmtCurrency(c.results.cost_per_life_counterfactual)}</td>
                 <td className="num">{fmtCurrency(c.inputs.cost.grant_size)}</td>

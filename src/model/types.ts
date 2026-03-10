@@ -237,6 +237,44 @@ export interface MainCEAResult {
   cost_per_life_counterfactual: number | null;
 }
 
+/** Monte Carlo summary statistics */
+export interface MCStats {
+  mean: number;
+  median: number;
+  std: number;
+  min: number;
+  max: number;
+  p5: number;
+  p25: number;
+  p75: number;
+  p95: number;
+}
+
+/** A single histogram bin */
+export interface HistogramBin {
+  x0: number;
+  x1: number;
+  count: number;
+}
+
+/** Tornado chart entry for one parameter */
+export interface TornadoEntry {
+  parameter: string;
+  p25_pct_delta: number;
+  p75_pct_delta: number;
+  p25_mean: number;
+  p75_mean: number;
+}
+
+/** Pre-computed Monte Carlo results for a country */
+export interface MonteCarloData {
+  n_simulations: number;
+  seed: number;
+  summary: MCStats;
+  histogram: HistogramBin[];
+  tornado: TornadoEntry[];
+}
+
 /** A single country's full data as stored in countries.json */
 export interface CountryData {
   id: string;
@@ -246,6 +284,7 @@ export interface CountryData {
   inputs: ITNInputs;
   supplementary: SupplementaryResults;
   results: MainCEAResult;
+  monte_carlo: MonteCarloData | null;
 }
 
 /** Top-level countries.json structure */

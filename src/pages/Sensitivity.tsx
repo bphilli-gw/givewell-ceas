@@ -11,10 +11,13 @@ import {
   Line,
   Legend,
   ReferenceLine,
+  Cell,
 } from 'recharts';
 import { useCountryData } from '../data/useCountryData';
 import { calculateMainCEA } from '../model/cea';
-import type { CountryData, ITNInputs } from '../model/types';
+import type { CountryData, ITNInputs, TornadoEntry } from '../model/types';
+
+// ── Parameter sweep config (unchanged) ──────────────────────────────────
 
 interface SweepParam {
   key: string;
@@ -88,45 +91,68 @@ const COLORS = [
   '#db2777', '#0891b2', '#65a30d', '#ea580c', '#4f46e5',
 ];
 
+// ── Friendly parameter labels ───────────────────────────────────────────
+
+const PARAM_LABELS: Record<string, string> = {
+  cost_per_under5_reached: 'Cost per Under-5 Reached',
+  proportion_sleeping_counterfactual: 'Counterfactual Coverage',
+  years_of_coverage: 'Years of Coverage',
+  malaria_mortality_rate_under5: 'Mortality Rate (Under 5)',
+  effect_of_itn_on_deaths: 'Effect on Deaths',
+  adj_mortality_over5: 'Over-5 Mortality Adj.',
+  adj_developmental_benefits: 'Developmental Benefits Adj.',
+  adj_program_benefits: 'Program Benefits Adj.',
+  adj_grantee_factors: 'Grantee Factors Adj.',
+  adj_funging: 'Funging Adj.',
+};
+
+function friendlyParam(name: string): string {
+  return PARAM_LABELS[name] ?? name.replace(/_/g, ' ');
+}
+
+// ── Component ───────────────────────────────────────────────────────────
+
 export default function Sensitivity() {
   const { data, loading, error } = useCountryData();
   const [selectedParam, setSelectedParam] = useState<string>(SWEEP_PARAMS[0].key);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  const [tornadoCountryId, setTornadoCountryId] = useState<string>('');
 
-  // Tornado data: for each param, compute CE at low and high ends for a reference country
+  // Pick the tornado reference country (default to highest CE with MC data)
+  const tornadoCountry = useMemo(() => {
+    if (!data) return null;
+    if (tornadoCountryId) {
+      return data.countries.find((c) => c.id === tornadoCountryId) ?? null;
+    }
+    return data.countries.find((c) => c.monte_carlo != null) ?? data.countries[0] ?? null;
+  }, [data, tornadoCountryId]);
+
+  // Format MC tornado data for Recharts
   const tornadoData = useMemo(() => {
-    if (!data) return [];
-    const ref = data.countries[0]; // highest CE country
-    if (!ref) return [];
+    if (!tornadoCountry?.monte_carlo) return null;
 
-    return SWEEP_PARAMS.map((param) => {
-      const baseVal = getNestedValue(ref.inputs as unknown as Record<string, unknown>, param.path);
-      const [lo, hi] = param.defaultRange;
-
-      const computeAt = (val: number) => {
-        const modified = setNestedValue(
-          JSON.parse(JSON.stringify(ref.inputs)) as Record<string, unknown>,
-          param.path,
-          val
-        );
-        return calculateMainCEA(modified as unknown as ITNInputs, ref.supplementary, data.global_physical_adjusted)
-          .final_ce_multiple ?? 0;
-      };
-
-      const baseCE = ref.results.final_ce_multiple ?? 0;
-      const loCE = computeAt(lo);
-      const hiCE = computeAt(hi);
-
+    return tornadoCountry.monte_carlo.tornado.map((t: TornadoEntry) => {
+      const lo = Math.min(t.p25_pct_delta, t.p75_pct_delta) * 100;
+      const hi = Math.max(t.p25_pct_delta, t.p75_pct_delta) * 100;
       return {
-        param: param.label,
-        baseCE,
-        low: Math.min(loCE, hiCE) - baseCE,
-        high: Math.max(loCE, hiCE) - baseCE,
-        range: Math.abs(hiCE - loCE),
-        baseVal,
+        param: friendlyParam(t.parameter),
+        low: lo,
+        high: hi,
+        spread: Math.abs(hi - lo),
       };
-    }).sort((a, b) => b.range - a.range);
-  }, [data]);
+    }).sort((a: { spread: number }, b: { spread: number }) => b.spread - a.spread);
+  }, [tornadoCountry]);
+
+  // Histogram data
+  const histogramData = useMemo(() => {
+    if (!tornadoCountry?.monte_carlo) return null;
+    const baseCE = tornadoCountry.results.final_ce_multiple ?? 0;
+    return tornadoCountry.monte_carlo.histogram.map((bin) => ({
+      x: (bin.x0 + bin.x1) / 2,
+      count: bin.count,
+      isBaseline: bin.x0 <= baseCE && baseCE < bin.x1,
+    }));
+  }, [tornadoCountry]);
 
   // Sweep data for selected param and countries
   const sweepData = useMemo(() => {
@@ -140,7 +166,6 @@ export default function Sensitivity() {
       return { country, sweep: computeSweep(country, param, data.global_physical_adjusted) };
     }).filter(Boolean) as { country: CountryData; sweep: { paramValue: number; ce: number }[] }[];
 
-    // Merge into chart-friendly format
     if (countrySweeps.length === 0) return null;
     const merged = countrySweeps[0].sweep.map((point, i) => {
       const row: Record<string, number> = { paramValue: point.paramValue };
@@ -163,44 +188,152 @@ export default function Sensitivity() {
     );
   };
 
-  const refCountry = data.countries[0];
+  const mc = tornadoCountry?.monte_carlo;
 
   return (
     <div className="page sensitivity-page">
       <h1>Sensitivity Analysis</h1>
       <p className="subtitle">
-        Explore how changing key parameters affects cost-effectiveness.
+        Monte Carlo uncertainty analysis ({mc?.n_simulations?.toLocaleString() ?? '—'} simulations)
+        and parameter sweeps.
       </p>
 
+      {/* ── Country selector for MC sections ── */}
       <section className="section">
-        <h2>Tornado Diagram — {refCountry?.display_name}</h2>
-        <p className="section-desc">
-          Impact of sweeping each parameter from its low to high bound on the CE multiple.
-        </p>
-        <div className="chart-container" style={{ height: 300 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              layout="vertical"
-              data={tornadoData}
-              margin={{ left: 120, right: 20, top: 10, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" label={{ value: 'Change in CE Multiple', position: 'bottom' }} />
-              <YAxis type="category" dataKey="param" width={110} />
-              <Tooltip
-                formatter={(val) => {
-                  const n = Number(val);
-                  return (n > 0 ? '+' : '') + n.toFixed(2) + 'x';
-                }}
-              />
-              <ReferenceLine x={0} stroke="#666" />
-              <Bar dataKey="low" fill="#ef4444" name="Low end" stackId="a" />
-              <Bar dataKey="high" fill="#22c55e" name="High end" stackId="a" />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="control-group">
+          <label>Reference country:</label>
+          <select
+            value={tornadoCountry?.id ?? ''}
+            onChange={(e) => setTornadoCountryId(e.target.value)}
+          >
+            {data.countries.filter((c) => c.monte_carlo != null).map((c) => (
+              <option key={c.id} value={c.id}>{c.display_name}</option>
+            ))}
+          </select>
         </div>
       </section>
 
+      {/* ── MC Summary Stats ── */}
+      {mc && (
+        <section className="section">
+          <h2>Distribution Summary — {tornadoCountry?.display_name}</h2>
+          <div className="mc-stats-row">
+            <div className="mc-stat">
+              <span className="mc-stat-value">{mc.summary.mean.toFixed(2)}x</span>
+              <span className="mc-stat-label">Mean</span>
+            </div>
+            <div className="mc-stat">
+              <span className="mc-stat-value">{mc.summary.median.toFixed(2)}x</span>
+              <span className="mc-stat-label">Median</span>
+            </div>
+            <div className="mc-stat">
+              <span className="mc-stat-value">{mc.summary.p5.toFixed(2)}x</span>
+              <span className="mc-stat-label">P5</span>
+            </div>
+            <div className="mc-stat">
+              <span className="mc-stat-value">{mc.summary.p25.toFixed(2)}x — {mc.summary.p75.toFixed(2)}x</span>
+              <span className="mc-stat-label">IQR (P25–P75)</span>
+            </div>
+            <div className="mc-stat">
+              <span className="mc-stat-value">{mc.summary.p95.toFixed(2)}x</span>
+              <span className="mc-stat-label">P95</span>
+            </div>
+            <div className="mc-stat">
+              <span className="mc-stat-value">{((mc.summary.std / mc.summary.mean) * 100).toFixed(0)}%</span>
+              <span className="mc-stat-label">CV</span>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Histogram ── */}
+      {histogramData && (
+        <section className="section">
+          <h2>CE Distribution — {tornadoCountry?.display_name}</h2>
+          <p className="section-desc">
+            Distribution of cost-effectiveness multiples from {mc?.n_simulations?.toLocaleString()} Monte Carlo draws.
+            The highlighted bar contains the point estimate.
+          </p>
+          <div className="chart-container" style={{ height: 280 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={histogramData} margin={{ left: 10, right: 20, top: 10, bottom: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="x"
+                  label={{ value: 'CE Multiple', position: 'bottom', offset: 10 }}
+                  tickFormatter={(v: number) => v.toFixed(1)}
+                />
+                <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
+                <Tooltip
+                  formatter={(val: number) => [val, 'Simulations']}
+                  labelFormatter={(v: number) => `CE ≈ ${Number(v).toFixed(2)}x`}
+                />
+                <ReferenceLine
+                  x={tornadoCountry?.results.final_ce_multiple ?? 0}
+                  stroke="#dc2626"
+                  strokeDasharray="4 4"
+                  label={{ value: 'Point est.', position: 'top', fill: '#dc2626', fontSize: 12 }}
+                />
+                <Bar dataKey="count" name="Simulations">
+                  {histogramData.map((entry, idx) => (
+                    <Cell
+                      key={idx}
+                      fill={entry.isBaseline ? '#dc2626' : '#2563eb'}
+                      fillOpacity={entry.isBaseline ? 0.9 : 0.7}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      )}
+
+      {/* ── MC-based Tornado ── */}
+      {tornadoData && tornadoData.length > 0 && (
+        <section className="section">
+          <h2>Tornado Diagram — {tornadoCountry?.display_name}</h2>
+          <p className="section-desc">
+            One-at-a-time sensitivity: each parameter is held at its P25 and P75 while all others
+            vary via Monte Carlo. Bars show the % change in mean CE relative to the baseline.
+          </p>
+          <div className="chart-container" style={{ height: Math.max(250, tornadoData.length * 36 + 60) }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                layout="vertical"
+                data={tornadoData}
+                margin={{ left: 160, right: 30, top: 10, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  type="number"
+                  tickFormatter={(v: number) => `${v > 0 ? '+' : ''}${v.toFixed(0)}%`}
+                  label={{ value: '% Change in Mean CE', position: 'bottom', offset: 0 }}
+                />
+                <YAxis type="category" dataKey="param" width={150} tick={{ fontSize: 13 }} />
+                <Tooltip
+                  formatter={(val: number) => `${val > 0 ? '+' : ''}${val.toFixed(1)}%`}
+                />
+                <ReferenceLine x={0} stroke="#666" />
+                <Bar dataKey="low" fill="#ef4444" name="Low end" stackId="a" />
+                <Bar dataKey="high" fill="#22c55e" name="High end" stackId="a" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      )}
+
+      {/* ── No MC data fallback ── */}
+      {!mc && (
+        <section className="section">
+          <p className="hint">
+            No Monte Carlo data available for the selected country.
+            Run the precompute script to generate MC results.
+          </p>
+        </section>
+      )}
+
+      {/* ── Parameter Sweep (unchanged) ── */}
       <section className="section">
         <h2>Parameter Sweep</h2>
         <p className="section-desc">

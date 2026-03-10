@@ -64,12 +64,11 @@ export function calculateMainCEA(
     (cov.total_coverage_yr3 - baseline_coverage) * (1 + routine_adj) * (1 + speedup_adj);
 
   // ===== Section 4: Efficacy Chain =====
-  // Net retention data is not in ITNInputs type but we can derive trial_coverage_diff
-  // from supplementary data. For now, use a simplified approach: if we have the
-  // pre-computed trial_coverage_diff, use it. Otherwise compute from durability.
-  // We use globalPhysicalAdjusted which comes from Chad's durability.
+  const nr = inputs.net_retention;
   const trial_coverage_diff_val =
-    (0.568 - 0.486) * 0.766 * globalPhysicalAdjusted; // CTN treatment - control, remaining yr1
+    (nr.ctn_treatment_coverage - nr.ctn_control_coverage) *
+    nr.ctn_remaining_year1 *
+    globalPhysicalAdjusted;
 
   const raw_efficacy = eff.incidence_reduction / trial_coverage_diff_val;
   const adjusted_efficacy =

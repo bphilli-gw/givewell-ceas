@@ -201,6 +201,7 @@ def main():
         "generated": "2026-03-10",
         "model": "ITN CEA",
         "source": "cea-to-python",
+        "global_physical_adjusted": global_phys_adj,
         "countries": countries,
         "errors": errors,
     }

@@ -83,6 +83,15 @@ export interface AdjustmentData {
   net_durability_placeholder: number;
 }
 
+export interface NetRetentionData {
+  ctn_control_coverage: number;
+  ctn_treatment_coverage: number;
+  ctn_remaining_year1: number;
+  itn_remaining_year1: number;
+  itn_remaining_year2: number;
+  itn_remaining_year3: number;
+}
+
 export interface LeverageFungingData {
   prob_domestic_gov_replaces: number;
   prob_global_fund_replaces: number;
@@ -99,6 +108,7 @@ export interface ITNInputs {
   cost: CostData;
   net_distribution: NetDistributionData;
   population: PopulationData;
+  net_retention: NetRetentionData;
   efficacy: EfficacyData;
   incidence: IncidenceData;
   economic: EconomicData;
@@ -243,6 +253,7 @@ export interface CountriesData {
   generated: string;
   model: string;
   source: string;
+  global_physical_adjusted: number;
   countries: CountryData[];
   errors: { column: string; name: string; error: string }[];
 }

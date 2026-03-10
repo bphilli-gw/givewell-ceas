@@ -68,10 +68,11 @@ function parseInput(val: string, format: string): number {
 
 interface Props {
   country: CountryData;
-  onRecalculate: (result: MainCEAResult, modifiedInputs: Record<string, unknown>) => void;
+  globalPhysicalAdjusted: number;
+  onRecalculate: (result: MainCEAResult | null, modifiedInputs: Record<string, unknown>) => void;
 }
 
-export default function ParameterEditor({ country, onRecalculate }: Props) {
+export default function ParameterEditor({ country, globalPhysicalAdjusted, onRecalculate }: Props) {
   const [inputs, setInputs] = useState<Record<string, unknown>>(
     JSON.parse(JSON.stringify(country.inputs))
   );
@@ -87,11 +88,10 @@ export default function ParameterEditor({ country, onRecalculate }: Props) {
       setModified((prev) => new Set(prev).add(param.key));
 
       // Recalculate
-      const globalPhysAdj = country.supplementary.durability.physical_protection_adjusted;
       const result = calculateMainCEA(
         newInputs as unknown as CountryData['inputs'],
         country.supplementary,
-        globalPhysAdj
+        globalPhysicalAdjusted
       );
       onRecalculate(result, newInputs);
     },
@@ -102,13 +102,8 @@ export default function ParameterEditor({ country, onRecalculate }: Props) {
     const original = JSON.parse(JSON.stringify(country.inputs));
     setInputs(original);
     setModified(new Set());
-    const globalPhysAdj = country.supplementary.durability.physical_protection_adjusted;
-    const result = calculateMainCEA(
-      original as unknown as CountryData['inputs'],
-      country.supplementary,
-      globalPhysAdj
-    );
-    onRecalculate(result, original);
+    // Pass null to restore original pre-computed results
+    onRecalculate(null, original);
   }, [country, onRecalculate]);
 
   return (

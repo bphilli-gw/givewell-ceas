@@ -58,6 +58,7 @@ function setNestedValue(obj: Record<string, unknown>, path: string[], value: num
 function computeSweep(
   country: CountryData,
   param: SweepParam,
+  globalPhysicalAdjusted: number,
   steps: number = 20,
 ): { paramValue: number; ce: number }[] {
   const [lo, hi] = param.defaultRange;
@@ -71,11 +72,10 @@ function computeSweep(
       val
     );
 
-    const globalPhysAdj = country.supplementary.durability.physical_protection_adjusted;
     const result = calculateMainCEA(
       modifiedInputs as unknown as ITNInputs,
       country.supplementary,
-      globalPhysAdj
+      globalPhysicalAdjusted
     );
     results.push({ paramValue: val, ce: result.final_ce_multiple ?? 0 });
   }
@@ -109,8 +109,7 @@ export default function Sensitivity() {
           param.path,
           val
         );
-        const globalPhysAdj = ref.supplementary.durability.physical_protection_adjusted;
-        return calculateMainCEA(modified as unknown as ITNInputs, ref.supplementary, globalPhysAdj)
+        return calculateMainCEA(modified as unknown as ITNInputs, ref.supplementary, data.global_physical_adjusted)
           .final_ce_multiple ?? 0;
       };
 
@@ -138,7 +137,7 @@ export default function Sensitivity() {
     const countrySweeps = selectedCountries.map((cId) => {
       const country = data.countries.find((c) => c.id === cId);
       if (!country) return null;
-      return { country, sweep: computeSweep(country, param) };
+      return { country, sweep: computeSweep(country, param, data.global_physical_adjusted) };
     }).filter(Boolean) as { country: CountryData; sweep: { paramValue: number; ce: number }[] }[];
 
     // Merge into chart-friendly format

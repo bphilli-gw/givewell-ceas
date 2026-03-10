@@ -7,10 +7,10 @@ import type { MainCEAResult } from '../model/types';
 
 export default function CountryDetail() {
   const { id } = useParams<{ id: string }>();
-  const { country, loading, error } = useCountry(id);
+  const { country, globalPhysicalAdjusted, loading, error } = useCountry(id);
   const [result, setResult] = useState<MainCEAResult | null>(null);
 
-  const onRecalculate = useCallback((newResult: MainCEAResult) => {
+  const onRecalculate = useCallback((newResult: MainCEAResult | null) => {
     setResult(newResult);
   }, []);
 
@@ -178,7 +178,7 @@ export default function CountryDetail() {
         </div>
 
         <aside className="detail-sidebar">
-          <ParameterEditor country={country} onRecalculate={onRecalculate} />
+          <ParameterEditor country={country} globalPhysicalAdjusted={globalPhysicalAdjusted} onRecalculate={onRecalculate} />
         </aside>
       </div>
     </div>

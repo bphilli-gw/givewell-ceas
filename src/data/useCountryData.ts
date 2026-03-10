@@ -33,10 +33,12 @@ export function useCountryData() {
 
 export function useCountry(id: string | undefined): {
   country: CountryData | null;
+  globalPhysicalAdjusted: number;
   loading: boolean;
   error: string | null;
 } {
   const { data, loading, error } = useCountryData();
   const country = data?.countries.find((c) => c.id === id) ?? null;
-  return { country, loading, error };
+  const globalPhysicalAdjusted = data?.global_physical_adjusted ?? 0;
+  return { country, globalPhysicalAdjusted, loading, error };
 }

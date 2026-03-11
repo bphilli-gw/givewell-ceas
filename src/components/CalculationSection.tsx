@@ -19,7 +19,7 @@ function formatValue(value: number | string | null | undefined, format?: string)
     case 'percent':
       return (value * 100).toFixed(2) + '%';
     case 'multiplier':
-      return value.toFixed(3) + 'x';
+      return value.toFixed(1) + 'x';
     default:
       if (Math.abs(value) >= 1000) {
         return value.toLocaleString('en-US', { maximumFractionDigits: 2 });

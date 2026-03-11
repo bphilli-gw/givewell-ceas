@@ -33,12 +33,12 @@ export default function CountryDetail() {
             <h1>{country.display_name}</h1>
             <div className="detail-ce">
               <span className={`ce-value ${isModified ? 'modified' : ''}`}>
-                {(r.final_ce_multiple ?? 0).toFixed(3)}x
+                {(r.final_ce_multiple ?? 0).toFixed(1)}x
               </span>
               <span className="ce-label">GiveDirectly</span>
               {isModified && (
                 <span className="ce-original">
-                  (was {(country.results.final_ce_multiple ?? 0).toFixed(3)}x)
+                  (was {(country.results.final_ce_multiple ?? 0).toFixed(1)}x)
                 </span>
               )}
             </div>
@@ -46,7 +46,7 @@ export default function CountryDetail() {
 
           <div className="key-metrics">
             <div className="metric">
-              <div className="metric-value">{(r.deaths_averted_under5 + r.deaths_averted_over5).toFixed(1)}</div>
+              <div className="metric-value">{Math.round(r.deaths_averted_under5 + r.deaths_averted_over5).toLocaleString()}</div>
               <div className="metric-label">Deaths Averted</div>
             </div>
             <div className="metric">

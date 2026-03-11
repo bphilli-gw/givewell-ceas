@@ -42,6 +42,11 @@ export default function Overview() {
       </div>
 
       <ResultsTable countries={countries} />
+
+      <p className="disclaimer">
+        All figures assume a $1,000,000 grant size per country. CE multiples and deaths averted
+        are rounded to reduce false precision — see the Sensitivity page for uncertainty ranges.
+      </p>
     </div>
   );
 }

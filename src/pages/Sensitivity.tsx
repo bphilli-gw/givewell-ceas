@@ -211,23 +211,23 @@ export default function Sensitivity() {
           <h2>Distribution Summary — {tornadoCountry?.display_name}</h2>
           <div className="mc-stats-row">
             <div className="mc-stat">
-              <span className="mc-stat-value">{mc.summary.mean.toFixed(2)}x</span>
+              <span className="mc-stat-value">{mc.summary.mean.toFixed(1)}x</span>
               <span className="mc-stat-label">Mean</span>
             </div>
             <div className="mc-stat">
-              <span className="mc-stat-value">{mc.summary.median.toFixed(2)}x</span>
+              <span className="mc-stat-value">{mc.summary.median.toFixed(1)}x</span>
               <span className="mc-stat-label">Median</span>
             </div>
             <div className="mc-stat">
-              <span className="mc-stat-value">{mc.summary.p5.toFixed(2)}x</span>
+              <span className="mc-stat-value">{mc.summary.p5.toFixed(1)}x</span>
               <span className="mc-stat-label">P5</span>
             </div>
             <div className="mc-stat">
-              <span className="mc-stat-value">{mc.summary.p25.toFixed(2)}x — {mc.summary.p75.toFixed(2)}x</span>
+              <span className="mc-stat-value">{mc.summary.p25.toFixed(1)}x — {mc.summary.p75.toFixed(1)}x</span>
               <span className="mc-stat-label">IQR (P25–P75)</span>
             </div>
             <div className="mc-stat">
-              <span className="mc-stat-value">{mc.summary.p95.toFixed(2)}x</span>
+              <span className="mc-stat-value">{mc.summary.p95.toFixed(1)}x</span>
               <span className="mc-stat-label">P95</span>
             </div>
             <div className="mc-stat">
@@ -381,7 +381,7 @@ export default function Sensitivity() {
                 />
                 <YAxis label={{ value: 'CE Multiple', angle: -90, position: 'insideLeft' }} />
                 <Tooltip
-                  formatter={(val) => Number(val).toFixed(3) + 'x'}
+                  formatter={(val) => Number(val).toFixed(1) + 'x'}
                   labelFormatter={(v) => {
                     const n = Number(v);
                     return sweepData.param.format === 'currency'

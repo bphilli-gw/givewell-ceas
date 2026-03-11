@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CountryData } from '../model/types';
 
-type SortKey = 'display_name' | 'final_ce_multiple' | 'deaths_averted' | 'cost_per_life' | 'grant_size';
+type SortKey = 'display_name' | 'final_ce_multiple' | 'deaths_averted' | 'cost_per_life' | 'nets_distributed';
 type SortDir = 'asc' | 'desc';
 
 function getValue(c: CountryData, key: SortKey): number | string {
@@ -15,9 +15,14 @@ function getValue(c: CountryData, key: SortKey): number | string {
       return (c.results.deaths_averted_under5 ?? 0) + (c.results.deaths_averted_over5 ?? 0);
     case 'cost_per_life':
       return c.results.cost_per_life_counterfactual ?? Infinity;
-    case 'grant_size':
-      return c.inputs.cost.grant_size;
+    case 'nets_distributed':
+      return c.results.nets_distributed ?? 0;
   }
+}
+
+function fmtInt(n: number | null | undefined): string {
+  if (n == null || !isFinite(n)) return '—';
+  return Math.round(n).toLocaleString('en-US');
 }
 
 function fmt(n: number | null | undefined, decimals = 2): string {
@@ -93,8 +98,8 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
             <th className="clickable num" onClick={() => handleSort('cost_per_life')}>
               Cost per Life{sortIndicator('cost_per_life')}
             </th>
-            <th className="clickable num" onClick={() => handleSort('grant_size')}>
-              Grant Size{sortIndicator('grant_size')}
+            <th className="clickable num" onClick={() => handleSort('nets_distributed')}>
+              Nets Distributed{sortIndicator('nets_distributed')}
             </th>
           </tr>
         </thead>
@@ -113,7 +118,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
               >
                 <td className="rank-col">{i + 1}</td>
                 <td>{c.display_name}</td>
-                <td className="num highlight">{fmt(c.results.final_ce_multiple)}x</td>
+                <td className="num highlight">{fmt(c.results.final_ce_multiple, 1)}x</td>
                 <td className="num uncertainty-cell">
                   {mc ? (
                     <div className="uncertainty-bar-wrapper">
@@ -150,9 +155,9 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
                     <span className="text-muted">—</span>
                   )}
                 </td>
-                <td className="num">{fmt(totalDeaths, 1)}</td>
+                <td className="num">{fmtInt(totalDeaths)}</td>
                 <td className="num">{fmtCurrency(c.results.cost_per_life_counterfactual)}</td>
-                <td className="num">{fmtCurrency(c.inputs.cost.grant_size)}</td>
+                <td className="num">{fmtInt(c.results.nets_distributed)}</td>
               </tr>
             );
           })}

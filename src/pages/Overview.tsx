@@ -22,7 +22,7 @@ export default function Overview() {
       <h1>ITN Cost-Effectiveness Analysis</h1>
       <p className="subtitle">
         {countries.length} country/region combinations ranked by cost-effectiveness
-        (as multiples of GiveDirectly).
+        (in multiples of our benchmark).
         Click any row to see the full calculation breakdown.
       </p>
 

@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from 'react';
 
-interface Row {
+export interface Row {
   label: string;
   value: number | string | null | undefined;
   format?: 'number' | 'currency' | 'percent' | 'multiplier';
   indent?: boolean;
   highlight?: boolean;
+  tooltip?: string;
 }
 
 function formatValue(value: number | string | null | undefined, format?: string): string {
@@ -17,12 +18,14 @@ function formatValue(value: number | string | null | undefined, format?: string)
     case 'currency':
       return '$' + Math.round(value).toLocaleString('en-US');
     case 'percent':
-      return (value * 100).toFixed(2) + '%';
+      return Math.round(value * 100) + '%';
     case 'multiplier':
       return value.toFixed(1) + 'x';
+    case 'number':
+      return Math.round(value).toLocaleString('en-US');
     default:
       if (Math.abs(value) >= 1000) {
-        return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        return Math.round(value).toLocaleString('en-US');
       }
       if (Math.abs(value) < 0.0001 && value !== 0) {
         return value.toExponential(4);
@@ -55,7 +58,16 @@ export default function CalculationSection({ title, rows, defaultOpen = false, c
               {rows.map((row, i) => (
                 <tr key={i} className={row.highlight ? 'highlight-row' : ''}>
                   <td className={row.indent ? 'indent' : ''}>{row.label}</td>
-                  <td className="num">{formatValue(row.value, row.format)}</td>
+                  <td className="num">
+                    {row.tooltip ? (
+                      <span className="has-tooltip">
+                        {formatValue(row.value, row.format)}
+                        <span className="tooltip-text">{row.tooltip}</span>
+                      </span>
+                    ) : (
+                      formatValue(row.value, row.format)
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

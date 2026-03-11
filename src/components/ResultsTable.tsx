@@ -12,11 +12,11 @@ function getValue(c: CountryData, key: SortKey): number | string {
     case 'final_ce_multiple':
       return c.results.final_ce_multiple ?? 0;
     case 'deaths_averted':
-      return (c.results.deaths_averted_under5 ?? 0) + (c.results.deaths_averted_over5 ?? 0);
+      return c.results.counterfactual_lives ?? 0;
     case 'cost_per_life':
       return c.results.cost_per_life_counterfactual ?? Infinity;
     case 'nets_distributed':
-      return c.results.nets_distributed ?? 0;
+      return c.results.counterfactual_nets ?? 0;
   }
 }
 
@@ -93,7 +93,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
             </th>
             <th className="num">Uncertainty (P5–P95)</th>
             <th className="clickable num" onClick={() => handleSort('deaths_averted')}>
-              Deaths Averted{sortIndicator('deaths_averted')}
+              Lives Saved{sortIndicator('deaths_averted')}
             </th>
             <th className="clickable num" onClick={() => handleSort('cost_per_life')}>
               Cost per Life{sortIndicator('cost_per_life')}
@@ -105,8 +105,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
         </thead>
         <tbody>
           {sorted.map((c, i) => {
-            const totalDeaths =
-              (c.results.deaths_averted_under5 ?? 0) + (c.results.deaths_averted_over5 ?? 0);
+            const totalDeaths = c.results.counterfactual_lives ?? 0;
             const mc = c.monte_carlo;
             const ce = c.results.final_ce_multiple ?? 0;
 
@@ -157,7 +156,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
                 </td>
                 <td className="num">{fmtInt(totalDeaths)}</td>
                 <td className="num">{fmtCurrency(c.results.cost_per_life_counterfactual)}</td>
-                <td className="num">{fmtInt(c.results.nets_distributed)}</td>
+                <td className="num">{fmtInt(c.results.counterfactual_nets)}</td>
               </tr>
             );
           })}

@@ -46,15 +46,15 @@ export default function CountryDetail() {
 
           <div className="key-metrics">
             <div className="metric">
-              <div className="metric-value">{Math.round(r.deaths_averted_under5 + r.deaths_averted_over5).toLocaleString()}</div>
-              <div className="metric-label">Deaths Averted</div>
+              <div className="metric-value">{Math.round(r.counterfactual_lives ?? 0).toLocaleString()}</div>
+              <div className="metric-label">Lives Saved</div>
             </div>
             <div className="metric">
               <div className="metric-value">${Math.round(r.cost_per_life_counterfactual ?? 0).toLocaleString()}</div>
               <div className="metric-label">Cost per Life</div>
             </div>
             <div className="metric">
-              <div className="metric-value">{Math.round(r.nets_distributed).toLocaleString()}</div>
+              <div className="metric-value">{Math.round(r.counterfactual_nets ?? 0).toLocaleString()}</div>
               <div className="metric-label">Nets Distributed</div>
             </div>
             <div className="metric">

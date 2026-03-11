@@ -12,8 +12,7 @@ export default function Overview() {
   const avgCE =
     countries.reduce((sum, c) => sum + (c.results.final_ce_multiple ?? 0), 0) / countries.length;
   const totalDeaths = countries.reduce(
-    (sum, c) =>
-      sum + (c.results.deaths_averted_under5 ?? 0) + (c.results.deaths_averted_over5 ?? 0),
+    (sum, c) => sum + (c.results.counterfactual_lives ?? 0),
     0
   );
 
@@ -37,7 +36,7 @@ export default function Overview() {
         </div>
         <div className="card">
           <div className="card-value">{totalDeaths.toFixed(0)}</div>
-          <div className="card-label">Total Deaths Averted</div>
+          <div className="card-label">Total Lives Saved</div>
         </div>
       </div>
 

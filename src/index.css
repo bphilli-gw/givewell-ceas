@@ -1067,6 +1067,55 @@ body {
   margin-bottom: 8px;
 }
 
+/* === Source Badges === */
+.source-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 500;
+  border-radius: 3px;
+  vertical-align: middle;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.source-badge--academic {
+  background: var(--cat-empirical-light);
+  color: var(--cat-empirical);
+  border: 1px solid var(--cat-empirical);
+}
+
+.source-badge--data {
+  background: var(--cat-output-light);
+  color: var(--cat-output);
+  border: 1px solid var(--cat-output);
+}
+
+.source-badge--analysis {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.source-badge--estimate {
+  background: var(--cat-subjective-light);
+  color: var(--cat-subjective);
+  border: 1px solid var(--cat-subjective);
+}
+
+.source-badge--judgment {
+  background: var(--cat-upstream-light);
+  color: var(--cat-upstream);
+  border: 1px solid var(--cat-upstream);
+}
+
+.source-badge--input {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
 /* === Header layout adjustment for tabs + nav === */
 .header-inner {
   flex-wrap: wrap;

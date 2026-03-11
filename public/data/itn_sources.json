@@ -1,0 +1,257 @@
+{
+  "Total spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "GiveWell (grantee) spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Other philanthropic spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Government spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Upstream spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Cost per net": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Upstream cost per net": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Nets distributed": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Target population": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "People sleeping under nets": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Proportion sleeping under nets": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Under-5 sleeping proportion": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Proportion under 5": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Proportion 5-14": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Target under 5": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Target 5-14": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Baseline coverage": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Coverage increase Year 1": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Coverage increase Year 2": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Coverage increase Year 3": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Trial coverage difference": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Net efficacy (per unit coverage)": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Mortality reduction Year 1": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Mortality reduction Year 2": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Mortality reduction Year 3": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Baseline mortality (adjusted)": {
+    "source": "GBD 2021",
+    "type": "data",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Net of SMC": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Mortality adjusted (vaccine)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Prevalence reduction from existing nets": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Mortality without any nets": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Potential deaths (under 5)": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Avg mortality reduction (3yr)": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Deaths averted under 5": {
+    "source": "Pryce et al. 2018",
+    "type": "academic"
+  },
+  "Deaths averted 5+": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Cases averted under 5": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Cases averted 5-14": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Income PV per case averted": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Total income value": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "UoV from under-5 deaths": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV from 5+ deaths": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV from income": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "Total UoV": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV per dollar": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "CE multiple (pre-adjustments)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total lives saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per life (pre-adjustments)": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Grantee-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Intervention-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Leverage adjustment": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Funging adjustment": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "L&F total": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total value after adjustments": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final UoV per dollar": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final CE multiple": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual nets distributed": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual lives saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per life (counterfactual)": {
+    "source": "Calculated",
+    "type": "calculated"
+  }
+}

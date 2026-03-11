@@ -1,0 +1,213 @@
+{
+  "Total spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "GiveWell (grantee) spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Other philanthropic spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Government spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Upstream spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Downstream spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Cost per cycle": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Cycles per year": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total cost per child": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Upstream cost per child": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total children covered": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Expected incidence reduction": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "additional_sources": [
+      "GW guesstimate"
+    ]
+  },
+  "Expected mortality reduction": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Annual mortality rate (3-59 months)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total mortality rate": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Vaccine-adjusted mortality rate": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Seasonal mortalities": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Deaths averted under 5": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "additional_sources": [
+      "GW guesstimate"
+    ]
+  },
+  "Spillover incidence reduction": {
+    "source": "Cisse et al. 2016",
+    "type": "academic"
+  },
+  "Spillover mortality reduction": {
+    "source": "Cisse et al. 2016",
+    "type": "academic",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Older mortality per eligible": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Deaths averted over 5": {
+    "source": "Cisse et al. 2016",
+    "type": "academic"
+  },
+  "Cases averted under 5": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Cases averted 5-14": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "PV lifetime benefits per case": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "additional_sources": [
+      "GW analysis"
+    ]
+  },
+  "Total PV income": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "UoV from under-5 deaths": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV from over-5 deaths": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV from income": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "Total UoV": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV per dollar": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "CE before adjustments": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total lives saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per life saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Grantee-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Intervention-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate"
+  },
+  "Leverage adjustment": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Funging adjustment": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "L&F overall adjustment": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Total value after adjustments": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final UoV per dollar": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final CE": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual people covered": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per counterfactual person": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual lives saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per counterfactual life": {
+    "source": "Calculated",
+    "type": "calculated"
+  }
+}

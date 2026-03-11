@@ -1,18 +1,30 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCountry } from '../data/useCountryData';
+import { useITNSources } from '../data/useSourceData';
 import CalculationSection from '../components/CalculationSection';
+import type { Row } from '../components/CalculationSection';
 import ParameterEditor from '../components/ParameterEditor';
 import type { MainCEAResult } from '../model/types';
 
 export default function CountryDetail() {
   const { id } = useParams<{ id: string }>();
   const { country, globalPhysicalAdjusted, loading, error } = useCountry(id);
+  const { getSource } = useITNSources();
   const [result, setResult] = useState<MainCEAResult | null>(null);
 
   const onRecalculate = useCallback((newResult: MainCEAResult | null) => {
     setResult(newResult);
   }, []);
+
+  // Auto-attach source badges to rows by label lookup
+  const withSources = useMemo(() => {
+    return (rows: Row[]): Row[] =>
+      rows.map((row) => {
+        const source = getSource(row.label);
+        return source ? { ...row, source } : row;
+      });
+  }, [getSource]);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -66,7 +78,7 @@ export default function CountryDetail() {
           <CalculationSection
             title="1. Costs"
             defaultOpen={true}
-            rows={[
+            rows={withSources([
               { label: 'Total spending', value: r.total_spending, format: 'currency',
                 tooltip: 'Total spending = GiveWell spending + other philanthropic spending + government spending' },
               { label: 'GiveWell (grantee) spending', value: r.grantee_spending, format: 'currency', indent: true },
@@ -77,12 +89,12 @@ export default function CountryDetail() {
                 tooltip: 'Cost per net = total spending / nets distributed' },
               { label: 'Upstream cost per net', value: r.upstream_cost_per_net, format: 'currency',
                 tooltip: 'Upstream cost per net = upstream spending / nets distributed' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="2. Distribution & Usage"
-            rows={[
+            rows={withSources([
               { label: 'Nets distributed', value: r.nets_distributed, format: 'number',
                 tooltip: 'Nets distributed = GiveWell spending / cost per net' },
               { label: 'Target population', value: r.target_population, format: 'number' },
@@ -96,23 +108,23 @@ export default function CountryDetail() {
                 tooltip: 'Target under 5 = target population \u00D7 proportion under 5' },
               { label: 'Target 5-14', value: r.target_5_14, format: 'number',
                 tooltip: 'Target 5-14 = target population \u00D7 proportion aged 5-14' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="3. Effective Coverage"
-            rows={[
+            rows={withSources([
               { label: 'Baseline coverage', value: r.baseline_coverage, format: 'percent' },
               { label: 'Coverage increase Year 1', value: r.coverage_increase_yr1, format: 'percent',
                 tooltip: 'Coverage increase = proportion sleeping under nets \u00D7 net retention for that year' },
               { label: 'Coverage increase Year 2', value: r.coverage_increase_yr2, format: 'percent' },
               { label: 'Coverage increase Year 3', value: r.coverage_increase_yr3, format: 'percent' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="4. Efficacy Chain"
-            rows={[
+            rows={withSources([
               { label: 'Trial coverage difference', value: r.trial_coverage_diff },
               { label: 'Net efficacy (per unit coverage)', value: r.net_efficacy, highlight: true,
                 tooltip: 'Net efficacy = mortality reduction from trials / trial coverage difference' },
@@ -120,12 +132,12 @@ export default function CountryDetail() {
                 tooltip: 'Mortality reduction = net efficacy \u00D7 coverage increase for this year' },
               { label: 'Mortality reduction Year 2', value: r.mortality_reduction_yr2, format: 'percent' },
               { label: 'Mortality reduction Year 3', value: r.mortality_reduction_yr3, format: 'percent' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="5. Mortality Impact"
-            rows={[
+            rows={withSources([
               { label: 'Baseline mortality (adjusted)', value: r.baseline_mortality_adjusted },
               { label: 'Net of SMC', value: r.mortality_net_of_smc },
               { label: 'Mortality adjusted (vaccine)', value: r.mortality_adjusted },
@@ -140,24 +152,24 @@ export default function CountryDetail() {
                 tooltip: 'Deaths averted (under 5) = potential deaths \u00D7 average mortality reduction over 3 years' },
               { label: 'Deaths averted 5+', value: r.deaths_averted_over5, highlight: true, format: 'number',
                 tooltip: 'Deaths averted (5+) = under-5 deaths averted \u00D7 ratio of over-5 to under-5 mortality' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="6. Incidence & Income"
-            rows={[
+            rows={withSources([
               { label: 'Cases averted under 5', value: r.cases_averted_under5, format: 'number',
                 tooltip: 'Cases averted = target population \u00D7 incidence rate \u00D7 coverage increase' },
               { label: 'Cases averted 5-14', value: r.cases_averted_5_14, format: 'number' },
               { label: 'Income PV per case averted', value: r.income_pv_per_case, format: 'currency' },
               { label: 'Total income value', value: r.total_income_value, format: 'currency',
                 tooltip: 'Total income value = (cases averted under 5 + cases averted 5-14) \u00D7 income PV per case averted' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="7. Value of Outcomes (Units of Value)"
-            rows={[
+            rows={withSources([
               { label: 'UoV from under-5 deaths', value: r.uov_under5_deaths,
                 tooltip: 'Units of value = deaths averted (under 5) \u00D7 moral weight for under-5 lives' },
               { label: 'UoV from 5+ deaths', value: r.uov_over5_deaths,
@@ -173,25 +185,25 @@ export default function CountryDetail() {
               { label: 'Total lives saved', value: r.total_lives_saved },
               { label: 'Cost per life (pre-adjustments)', value: r.cost_per_life_before_adj, format: 'currency',
                 tooltip: 'Cost per life = total spending / total lives saved' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="8. Adjustments"
-            rows={[
+            rows={withSources([
               { label: 'Grantee-level adjustment total', value: r.grantee_adj_total, format: 'percent' },
               { label: 'Intervention-level adjustment total', value: r.intervention_adj_total, format: 'percent' },
               { label: 'Leverage adjustment', value: r.leverage_adj, format: 'percent' },
               { label: 'Funging adjustment', value: r.funging_adj, format: 'percent' },
               { label: 'L&F total', value: r.lf_total, format: 'percent',
                 tooltip: 'Leverage & funging total = leverage adjustment \u00D7 funging adjustment' },
-            ]}
+            ])}
           />
 
           <CalculationSection
             title="9. Final Cost-Effectiveness"
             defaultOpen={true}
-            rows={[
+            rows={withSources([
               { label: 'Total value after adjustments', value: r.total_value_after_adj,
                 tooltip: 'Total value = total UoV \u00D7 grantee adjustment \u00D7 intervention adjustment \u00D7 L&F total' },
               { label: 'Final UoV per dollar', value: r.final_uov_per_dollar,
@@ -202,7 +214,7 @@ export default function CountryDetail() {
               { label: 'Counterfactual lives saved', value: r.counterfactual_lives, format: 'number' },
               { label: 'Cost per life (counterfactual)', value: r.cost_per_life_counterfactual, format: 'currency', highlight: true,
                 tooltip: 'Cost per life = GiveWell spending / counterfactual lives saved' },
-            ]}
+            ])}
           />
         </div>
 

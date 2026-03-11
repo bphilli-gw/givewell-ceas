@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import type { SourceEntry } from '../data/useSourceData';
 
 export interface Row {
   label: string;
@@ -7,12 +8,13 @@ export interface Row {
   indent?: boolean;
   highlight?: boolean;
   tooltip?: string;
+  source?: SourceEntry;
 }
 
 function formatValue(value: number | string | null | undefined, format?: string): string {
-  if (value == null) return '—';
+  if (value == null) return '\u2014';
   if (typeof value === 'string') return value;
-  if (!isFinite(value)) return '—';
+  if (!isFinite(value)) return '\u2014';
 
   switch (format) {
     case 'currency':
@@ -32,6 +34,21 @@ function formatValue(value: number | string | null | undefined, format?: string)
       }
       return value.toLocaleString('en-US', { maximumFractionDigits: 6 });
   }
+}
+
+function SourceBadge({ source }: { source: SourceEntry }) {
+  if (source.type === 'calculated') return null;
+
+  const typeClass = `source-badge source-badge--${source.type}`;
+  const title = source.additional_sources
+    ? `${source.source} (also: ${source.additional_sources.join(', ')})`
+    : source.source;
+
+  return (
+    <span className={typeClass} title={title}>
+      {source.source}
+    </span>
+  );
 }
 
 interface Props {
@@ -57,7 +74,10 @@ export default function CalculationSection({ title, rows, defaultOpen = false, c
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i} className={row.highlight ? 'highlight-row' : ''}>
-                  <td className={row.indent ? 'indent' : ''}>{row.label}</td>
+                  <td className={row.indent ? 'indent' : ''}>
+                    {row.label}
+                    {row.source && <SourceBadge source={row.source} />}
+                  </td>
                   <td className="num">
                     {row.tooltip ? (
                       <span className="has-tooltip">

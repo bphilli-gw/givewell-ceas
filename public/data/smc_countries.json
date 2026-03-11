@@ -220,7 +220,7 @@
         "counterfactual_lives_saved": 746.8932005090513,
         "cost_per_counterfactual_life": 1338.8795068939462
       },
-      "display_name": "Nigeria - Jigawa",
+      "display_name": "Nigeria, Jigawa",
       "id": "t",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -722,7 +722,7 @@
         "counterfactual_lives_saved": 752.834258941079,
         "cost_per_counterfactual_life": 1328.313620326709
       },
-      "display_name": "Nigeria - Zamfara",
+      "display_name": "Nigeria, Zamfara",
       "id": "y",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -1224,7 +1224,7 @@
         "counterfactual_lives_saved": 465.10369453114987,
         "cost_per_counterfactual_life": 2150.0581736037484
       },
-      "display_name": "Nigeria - Bauchi",
+      "display_name": "Nigeria, Bauchi",
       "id": "q",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -1726,7 +1726,7 @@
         "counterfactual_lives_saved": 445.1990319751756,
         "cost_per_counterfactual_life": 2246.1863754810684
       },
-      "display_name": "Nigeria - Kano",
+      "display_name": "Nigeria, Kano",
       "id": "u",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -2228,7 +2228,7 @@
         "counterfactual_lives_saved": 454.0944674372411,
         "cost_per_counterfactual_life": 2202.1849454446537
       },
-      "display_name": "Nigeria - Borno",
+      "display_name": "Nigeria, Borno",
       "id": "r",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -2730,7 +2730,7 @@
         "counterfactual_lives_saved": 396.8889444060945,
         "cost_per_counterfactual_life": 2519.596512058057
       },
-      "display_name": "Nigeria - Katsina",
+      "display_name": "Nigeria, Katsina",
       "id": "v",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -3232,7 +3232,7 @@
         "counterfactual_lives_saved": 351.33815538753237,
         "cost_per_counterfactual_life": 2846.2607452839325
       },
-      "display_name": "Nigeria - Yobe",
+      "display_name": "Nigeria, Yobe",
       "id": "x",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -4236,7 +4236,7 @@
         "counterfactual_lives_saved": 251.77310458682118,
         "cost_per_counterfactual_life": 3971.830119190356
       },
-      "display_name": "Nigeria - Sokoto",
+      "display_name": "Nigeria, Sokoto",
       "id": "w",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -4738,7 +4738,7 @@
         "counterfactual_lives_saved": 237.42655412172826,
         "cost_per_counterfactual_life": 4211.828806171787
       },
-      "display_name": "Nigeria - FCT (Abuja)",
+      "display_name": "Nigeria, FCT (Abuja)",
       "id": "s",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -6244,7 +6244,7 @@
         "counterfactual_lives_saved": 131.7306680700442,
         "cost_per_counterfactual_life": 7591.246705499719
       },
-      "display_name": "Mozambique - Nampula",
+      "display_name": "Mozambique, Nampula",
       "id": "p",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -6746,7 +6746,7 @@
         "counterfactual_lives_saved": 82.54136743397008,
         "cost_per_counterfactual_life": 12115.137307362413
       },
-      "display_name": "Uganda",
+      "display_name": "Uganda, Karamoja",
       "id": "ab",
       "monte_carlo": {
         "n_simulations": 5000,
@@ -7750,7 +7750,7 @@
         "counterfactual_lives_saved": 86.63710723301067,
         "cost_per_counterfactual_life": 11542.398308735055
       },
-      "display_name": "DRC - Tanganyika",
+      "display_name": "DRC, Tanganyika",
       "id": "o",
       "monte_carlo": null
     },
@@ -7971,7 +7971,7 @@
         "counterfactual_lives_saved": 80.54265592810088,
         "cost_per_counterfactual_life": 12415.781283555929
       },
-      "display_name": "DRC - Lualaba",
+      "display_name": "DRC, Lualaba",
       "id": "n",
       "monte_carlo": null
     },
@@ -8694,7 +8694,7 @@
         "counterfactual_lives_saved": 73.4902316934496,
         "cost_per_counterfactual_life": 13607.250609459337
       },
-      "display_name": "DRC - Haut-Lomami",
+      "display_name": "DRC, Haut-Lomami",
       "id": "m",
       "monte_carlo": null
     },
@@ -8915,7 +8915,7 @@
         "counterfactual_lives_saved": 68.97562126245951,
         "cost_per_counterfactual_life": 14497.875940760208
       },
-      "display_name": "DRC - Haut-Katanga",
+      "display_name": "DRC, Haut-Katanga",
       "id": "l",
       "monte_carlo": null
     }

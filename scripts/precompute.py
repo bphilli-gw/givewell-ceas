@@ -381,9 +381,9 @@ def _format_mc_result(mc_result, summary, histogram, tornado) -> dict:
 ITN_COLUMN_DISPLAY_NAMES = {
     "I": "Chad",
     "J": "Côte d'Ivoire",
-    "K": "DRC (overall)",
-    "L": "DRC - Ituri",
-    "M": "DRC - Kasai Oriental",
+    "K": "DRC",
+    "L": "DRC, Ituri",
+    "M": "DRC, Kasai Oriental",
     "N": "Ghana",
     "O": "Guinea",
     "P": "Nigeria (GF states)",
@@ -392,42 +392,60 @@ ITN_COLUMN_DISPLAY_NAMES = {
     "S": "Togo",
     "T": "Uganda",
     "U": "Zambia",
-    "V": "MC - Abia/Ebonyi",
-    "W": "MC - Adamawa",
-    "X": "MC - Bauchi",
-    "Y": "MC - Gombe",
-    "Z": "MC - Jigawa",
-    "AA": "MC - Kaduna",
-    "AB": "MC - Katsina",
-    "AC": "MC - Kebbi",
-    "AD": "MC - Lagos",
-    "AE": "MC - Ondo",
-    "AF": "MC - Rivers",
-    "AG": "MC - Sokoto",
-    "AH": "MC - Zamfara",
+    "V": "Nigeria, Abia/Ebonyi",
+    "W": "Nigeria, Adamawa",
+    "X": "Nigeria, Bauchi",
+    "Y": "Nigeria, Gombe",
+    "Z": "Nigeria, Jigawa",
+    "AA": "Nigeria, Kaduna",
+    "AB": "Nigeria, Katsina",
+    "AC": "Nigeria, Kebbi",
+    "AD": "Nigeria, Lagos",
+    "AE": "Nigeria, Ondo",
+    "AF": "Nigeria, Rivers",
+    "AG": "Nigeria, Sokoto",
+    "AH": "Nigeria, Zamfara",
+}
+
+# Implementer for each ITN column (unused in UI for now, stored in data)
+ITN_COLUMN_IMPLEMENTERS = {
+    "V": "Malaria Consortium",
+    "W": "Malaria Consortium",
+    "X": "Malaria Consortium",
+    "Y": "Malaria Consortium",
+    "Z": "Malaria Consortium",
+    "AA": "Malaria Consortium",
+    "AB": "Malaria Consortium",
+    "AC": "Malaria Consortium",
+    "AD": "Malaria Consortium",
+    "AE": "Malaria Consortium",
+    "AF": "Malaria Consortium",
+    "AG": "Malaria Consortium",
+    "AH": "Malaria Consortium",
+    # All others default to "Against Malaria Foundation"
 }
 
 SMC_COLUMN_DISPLAY_NAMES = {
     "I": "Burkina Faso",
     "J": "Chad",
     "K": "Côte d'Ivoire",
-    "L": "DRC - Haut-Katanga",
-    "M": "DRC - Haut-Lomami",
-    "N": "DRC - Lualaba",
-    "O": "DRC - Tanganyika",
-    "P": "Mozambique - Nampula",
-    "Q": "Nigeria - Bauchi",
-    "R": "Nigeria - Borno",
-    "S": "Nigeria - FCT (Abuja)",
-    "T": "Nigeria - Jigawa",
-    "U": "Nigeria - Kano",
-    "V": "Nigeria - Katsina",
-    "W": "Nigeria - Sokoto",
-    "X": "Nigeria - Yobe",
-    "Y": "Nigeria - Zamfara",
+    "L": "DRC, Haut-Katanga",
+    "M": "DRC, Haut-Lomami",
+    "N": "DRC, Lualaba",
+    "O": "DRC, Tanganyika",
+    "P": "Mozambique, Nampula",
+    "Q": "Nigeria, Bauchi",
+    "R": "Nigeria, Borno",
+    "S": "Nigeria, FCT (Abuja)",
+    "T": "Nigeria, Jigawa",
+    "U": "Nigeria, Kano",
+    "V": "Nigeria, Katsina",
+    "W": "Nigeria, Sokoto",
+    "X": "Nigeria, Yobe",
+    "Y": "Nigeria, Zamfara",
     "Z": "South Sudan",
     "AA": "Togo",
-    "AB": "Uganda",
+    "AB": "Uganda, Karamoja",
 }
 
 
@@ -455,6 +473,7 @@ def run_itn():
             data = compute_itn_country(loader, col, drc_fallback, global_phys_adj)
             data["display_name"] = display_name
             data["id"] = col.lower()
+            data["implementer"] = ITN_COLUMN_IMPLEMENTERS.get(col, "Against Malaria Foundation")
 
             ce = data['results']['final_ce_multiple']
             mc_data = compute_itn_monte_carlo(col, display_name, ce)

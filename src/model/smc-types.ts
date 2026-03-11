@@ -279,6 +279,7 @@ export interface SMCCountryData {
   column: string;
   country: string;
   display_name: string;
+  implementer?: string;
   inputs: SMCInputs;
   supplementary: SMCSupplementaryResults;
   results: SMCMainCEAResult;

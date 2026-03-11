@@ -367,6 +367,7 @@
       },
       "display_name": "Nigeria (GF states)",
       "id": "p",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -1020,6 +1021,7 @@
       },
       "display_name": "Guinea",
       "id": "o",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -1673,6 +1675,7 @@
       },
       "display_name": "Uganda",
       "id": "t",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -2324,8 +2327,9 @@
         "counterfactual_lives": 276.78452330728624,
         "cost_per_life_counterfactual": 3612.9187717977993
       },
-      "display_name": "MC - Gombe",
+      "display_name": "Nigeria, Gombe",
       "id": "y",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -2977,8 +2981,9 @@
         "counterfactual_lives": 276.99521203685913,
         "cost_per_life_counterfactual": 3610.1707052861702
       },
-      "display_name": "MC - Ondo",
+      "display_name": "Nigeria, Ondo",
       "id": "ae",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -3630,8 +3635,9 @@
         "counterfactual_lives": 263.6131601923458,
         "cost_per_life_counterfactual": 3793.437320315679
       },
-      "display_name": "DRC - Ituri",
+      "display_name": "DRC, Ituri",
       "id": "l",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -4283,8 +4289,9 @@
         "counterfactual_lives": 247.50591140681803,
         "cost_per_life_counterfactual": 4040.307539791767
       },
-      "display_name": "MC - Abia/Ebonyi",
+      "display_name": "Nigeria, Abia/Ebonyi",
       "id": "v",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -4938,6 +4945,7 @@
       },
       "display_name": "Nigeria (PMI states)",
       "id": "q",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -5591,6 +5599,7 @@
       },
       "display_name": "Côte d'Ivoire",
       "id": "j",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -6242,8 +6251,9 @@
         "counterfactual_lives": 214.10878723660065,
         "cost_per_life_counterfactual": 4670.52292858467
       },
-      "display_name": "MC - Kebbi",
+      "display_name": "Nigeria, Kebbi",
       "id": "ac",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -6897,6 +6907,7 @@
       },
       "display_name": "South Sudan",
       "id": "r",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -7548,8 +7559,9 @@
         "counterfactual_lives": 178.72948566531542,
         "cost_per_life_counterfactual": 5595.047712902706
       },
-      "display_name": "DRC - Kasai Oriental",
+      "display_name": "DRC, Kasai Oriental",
       "id": "m",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -8203,6 +8215,7 @@
       },
       "display_name": "Chad",
       "id": "i",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -8854,8 +8867,9 @@
         "counterfactual_lives": 184.36662246726206,
         "cost_per_life_counterfactual": 5423.97526524938
       },
-      "display_name": "MC - Kaduna",
+      "display_name": "Nigeria, Kaduna",
       "id": "aa",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -9507,8 +9521,9 @@
         "counterfactual_lives": 153.05708204088083,
         "cost_per_life_counterfactual": 6533.510156249448
       },
-      "display_name": "MC - Bauchi",
+      "display_name": "Nigeria, Bauchi",
       "id": "x",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -10160,8 +10175,9 @@
         "counterfactual_lives": 170.43164209822413,
         "cost_per_life_counterfactual": 5867.455055227798
       },
-      "display_name": "MC - Zamfara",
+      "display_name": "Nigeria, Zamfara",
       "id": "ah",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -10813,8 +10829,9 @@
         "counterfactual_lives": 148.9408404538349,
         "cost_per_life_counterfactual": 6714.075178795274
       },
-      "display_name": "MC - Sokoto",
+      "display_name": "Nigeria, Sokoto",
       "id": "ag",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -11466,8 +11483,9 @@
         "counterfactual_lives": 135.62074049418004,
         "cost_per_life_counterfactual": 7373.503465297135
       },
-      "display_name": "DRC (overall)",
+      "display_name": "DRC",
       "id": "k",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -12121,6 +12139,7 @@
       },
       "display_name": "Zambia",
       "id": "u",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -12774,6 +12793,7 @@
       },
       "display_name": "Togo",
       "id": "s",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -13425,8 +13445,9 @@
         "counterfactual_lives": 129.38196425040775,
         "cost_per_life_counterfactual": 7729.0525444843715
       },
-      "display_name": "MC - Lagos",
+      "display_name": "Nigeria, Lagos",
       "id": "ad",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -14078,8 +14099,9 @@
         "counterfactual_lives": 114.47644451622716,
         "cost_per_life_counterfactual": 8735.421546554488
       },
-      "display_name": "MC - Jigawa",
+      "display_name": "Nigeria, Jigawa",
       "id": "z",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -14731,8 +14753,9 @@
         "counterfactual_lives": 120.08625635058289,
         "cost_per_life_counterfactual": 8327.34761154161
       },
-      "display_name": "MC - Katsina",
+      "display_name": "Nigeria, Katsina",
       "id": "ab",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -15384,8 +15407,9 @@
         "counterfactual_lives": 111.64650007669627,
         "cost_per_life_counterfactual": 8956.841453274788
       },
-      "display_name": "MC - Adamawa",
+      "display_name": "Nigeria, Adamawa",
       "id": "w",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,
@@ -16039,6 +16063,7 @@
       },
       "display_name": "Ghana",
       "id": "n",
+      "implementer": "Against Malaria Foundation",
       "monte_carlo": null
     },
     {
@@ -16402,8 +16427,9 @@
         "counterfactual_lives": 89.55911167652468,
         "cost_per_life_counterfactual": 11165.809723658982
       },
-      "display_name": "MC - Rivers",
+      "display_name": "Nigeria, Rivers",
       "id": "af",
+      "implementer": "Malaria Consortium",
       "monte_carlo": {
         "n_simulations": 5000,
         "seed": 42,

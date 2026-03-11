@@ -345,6 +345,7 @@ export interface CountryData {
   column: string;
   country: string;
   display_name: string;
+  implementer?: string;
   inputs: ITNInputs;
   supplementary: SupplementaryResults;
   results: MainCEAResult;

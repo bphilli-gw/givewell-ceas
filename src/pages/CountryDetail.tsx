@@ -23,7 +23,7 @@ export default function CountryDetail() {
 
   return (
     <div className="page detail-page">
-      <Link to="/" className="back-link">
+      <Link to="/itn" className="back-link">
         &larr; Back to Overview
       </Link>
 

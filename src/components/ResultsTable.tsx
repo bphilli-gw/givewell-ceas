@@ -113,7 +113,7 @@ export default function ResultsTable({ countries }: { countries: CountryData[] }
               <tr
                 key={c.id}
                 className="clickable-row"
-                onClick={() => navigate(`/country/${c.id}`)}
+                onClick={() => navigate(`/itn/country/${c.id}`)}
               >
                 <td className="rank-col">{i + 1}</td>
                 <td>{c.display_name}</td>

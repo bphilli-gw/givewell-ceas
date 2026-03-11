@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { CountriesData, CountryData } from '../model/types';
+import type { SMCCountriesData, SMCCountryData } from '../model/smc-types';
 
-let cachedData: CountriesData | null = null;
+let cachedData: SMCCountriesData | null = null;
 
-export function useCountryData() {
-  const [data, setData] = useState<CountriesData | null>(cachedData);
+export function useSMCCountryData() {
+  const [data, setData] = useState<SMCCountriesData | null>(cachedData);
   const [loading, setLoading] = useState(!cachedData);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,12 +12,12 @@ export function useCountryData() {
     if (cachedData) return;
 
     const base = import.meta.env.BASE_URL;
-    fetch(`${base}data/itn_countries.json`)
+    fetch(`${base}data/smc_countries.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then((json: CountriesData) => {
+      .then((json: SMCCountriesData) => {
         cachedData = json;
         setData(json);
         setLoading(false);
@@ -31,14 +31,12 @@ export function useCountryData() {
   return { data, loading, error };
 }
 
-export function useCountry(id: string | undefined): {
-  country: CountryData | null;
-  globalPhysicalAdjusted: number;
+export function useSMCCountry(id: string | undefined): {
+  country: SMCCountryData | null;
   loading: boolean;
   error: string | null;
 } {
-  const { data, loading, error } = useCountryData();
+  const { data, loading, error } = useSMCCountryData();
   const country = data?.countries.find((c) => c.id === id) ?? null;
-  const globalPhysicalAdjusted = data?.global_physical_adjusted ?? 0;
-  return { country, globalPhysicalAdjusted, loading, error };
+  return { country, loading, error };
 }

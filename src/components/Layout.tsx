@@ -1,6 +1,11 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 export default function Layout() {
+  const { pathname } = useLocation();
+  const isSMC = pathname.startsWith('/smc');
+  const isITN = pathname.startsWith('/itn');
+  const prefix = isSMC ? '/smc' : isITN ? '/itn' : null;
+
   return (
     <div className="app">
       <header className="header">
@@ -8,14 +13,30 @@ export default function Layout() {
           <NavLink to="/" className="logo">
             GiveWell CEA Explorer
           </NavLink>
-          <nav className="nav">
-            <NavLink to="/" end>
-              Overview
+
+          {/* CEA type tabs */}
+          <div className="cea-tabs">
+            <NavLink to="/itn" className={({ isActive }) => `cea-tab ${isActive || isITN ? 'active' : ''}`}>
+              ITN
             </NavLink>
-            <NavLink to="/sensitivity">Sensitivity</NavLink>
-            <NavLink to="/compare">Compare</NavLink>
-            <NavLink to="/explore/insecticide-resistance">Explore</NavLink>
-          </nav>
+            <NavLink to="/smc" className={({ isActive }) => `cea-tab ${isActive || isSMC ? 'active' : ''}`}>
+              SMC
+            </NavLink>
+          </div>
+
+          {/* Sub-navigation (only when in a CEA type) */}
+          {prefix && (
+            <nav className="nav">
+              <NavLink to={prefix} end>
+                Overview
+              </NavLink>
+              <NavLink to={`${prefix}/sensitivity`}>Sensitivity</NavLink>
+              <NavLink to={`${prefix}/compare`}>Compare</NavLink>
+              {isITN && (
+                <NavLink to="/itn/explore/insecticide-resistance">Explore</NavLink>
+              )}
+            </nav>
+          )}
         </div>
       </header>
       <main className="main">
@@ -23,8 +44,8 @@ export default function Layout() {
       </main>
       <footer className="footer">
         <p>
-          Data from GiveWell's ITN cost-effectiveness analysis.{' '}
-          Model validated against spreadsheet with &lt;1e-6 tolerance.
+          Data from GiveWell's cost-effectiveness analyses.{' '}
+          Models validated against spreadsheets with &lt;1e-6 tolerance.
         </p>
       </footer>
     </div>

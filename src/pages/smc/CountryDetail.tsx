@@ -1,14 +1,21 @@
-import { useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSMCCountry } from '../../data/useSMCCountryData';
 import { useSMCSources } from '../../data/useSourceData';
 import CalculationSection from '../../components/CalculationSection';
 import type { Row } from '../../components/CalculationSection';
+import SMCParameterEditor from '../../components/SMCParameterEditor';
+import type { SMCMainCEAResult } from '../../model/smc-types';
 
 export default function SMCCountryDetail() {
   const { id } = useParams<{ id: string }>();
   const { country, loading, error } = useSMCCountry(id);
   const { getSource } = useSMCSources();
+  const [result, setResult] = useState<SMCMainCEAResult | null>(null);
+
+  const onRecalculate = useCallback((newResult: SMCMainCEAResult | null) => {
+    setResult(newResult);
+  }, []);
 
   const withSources = useMemo(() => {
     return (rows: Row[]): Row[] =>
@@ -22,7 +29,8 @@ export default function SMCCountryDetail() {
   if (error) return <div className="error">Error: {error}</div>;
   if (!country) return <div className="error">Country not found</div>;
 
-  const r = country.results;
+  const r = result ?? country.results;
+  const isModified = result !== null;
 
   return (
     <div className="page detail-page">
@@ -35,8 +43,15 @@ export default function SMCCountryDetail() {
           <div className="detail-header">
             <h1>{country.display_name}</h1>
             <div className="detail-ce">
-              <span className="ce-value">{r.final_ce.toFixed(1)}</span>
+              <span className={`ce-value ${isModified ? 'modified' : ''}`}>
+                {r.final_ce.toFixed(1)}
+              </span>
               <span className="ce-label">CE (units of value per dollar / benchmark)</span>
+              {isModified && (
+                <span className="ce-original">
+                  (was {country.results.final_ce.toFixed(1)})
+                </span>
+              )}
             </div>
           </div>
 
@@ -157,13 +172,7 @@ export default function SMCCountryDetail() {
         </div>
 
         <aside className="detail-sidebar">
-          <div className="sidebar-card">
-            <h3>Interactive Editing</h3>
-            <p className="text-muted" style={{ fontSize: '0.9rem' }}>
-              Interactive parameter editing is not yet available for SMC.
-              The SMC TypeScript model will be ported in a future update.
-            </p>
-          </div>
+          <SMCParameterEditor country={country} onRecalculate={onRecalculate} />
         </aside>
       </div>
     </div>

@@ -1,9 +1,10 @@
 """
 Pre-compute CEA results for all countries and export as JSON.
 
-Generates two files:
+Generates three files:
   - public/data/itn_countries.json  (26 ITN locations)
   - public/data/smc_countries.json  (20 SMC locations)
+  - public/data/vas_countries.json  (46 VAS locations)
 
 Run from the cea-to-python directory:
     python -m scripts.precompute
@@ -49,10 +50,26 @@ from src.models.smc.monte_carlo import (
 )
 from src.models.smc.sensitivity import run_sensitivity_analysis as smc_run_sensitivity_analysis
 
+# --- VAS imports ---
+from src.models.vas.input_loader import VASInputLoader, ALL_COLUMNS as VAS_ALL_COLUMNS
+from src.models.vas.counterfactual_coverage import calculate_counterfactual_coverage as vas_calculate_counterfactual_coverage
+from src.models.vas.counterfactual_mortality import calculate_counterfactual_mortality as vas_calculate_counterfactual_mortality
+from src.models.vas.external_validity import calculate_external_validity as vas_calculate_external_validity
+from src.models.vas.main_cea import calculate_main_cea as vas_calculate_main_cea
+from src.models.vas.leverage_funging import calculate_leverage_funging as vas_calculate_leverage_funging
+from src.models.vas.mc_config import build_mc_config as vas_build_mc_config
+from src.models.vas.monte_carlo import (
+    run_simple_monte_carlo as vas_run_simple_monte_carlo,
+    MCStats as VASMCStats,
+)
+from src.models.vas.sensitivity import run_sensitivity_analysis as vas_run_sensitivity_analysis
+
 DATA_DIR = CEA_REPO / "data" / "extracted"
 SMC_DATA_DIR = CEA_REPO / "data" / "extracted" / "smc"
+VAS_DATA_DIR = CEA_REPO / "data" / "extracted" / "vas"
 CI_JSON = DATA_DIR / "Confidence_intervals.json"
 SMC_CI_JSON = SMC_DATA_DIR / "Confidence_intervals.json"
+VAS_CI_JSON = VAS_DATA_DIR / "Confidence_Intervals.json"
 MC_SIMULATIONS = 5000
 MC_SEED = 42
 HISTOGRAM_BINS = 40
@@ -448,6 +465,35 @@ SMC_COLUMN_DISPLAY_NAMES = {
     "AB": "Uganda, Karamoja",
 }
 
+VAS_COLUMN_DISPLAY_NAMES = {
+    # Helen Keller International (I-V)
+    "I": "Burkina Faso", "J": "Cameroon", "K": "Côte d'Ivoire", "L": "DRC",
+    "M": "Guinea", "N": "Madagascar", "O": "Mali", "P": "Niger",
+    "Q": "Nigeria, Adamawa", "R": "Nigeria, Benue", "S": "Nigeria, Ebonyi",
+    "T": "Nigeria, FCT (Abuja)", "U": "Nigeria, Nasarawa", "V": "Nigeria, Taraba",
+    # Nutrition International (W-AG)
+    "W": "Angola", "X": "Bangladesh", "Y": "Chad", "Z": "Ethiopia", "AA": "Kenya",
+    "AB": "Nigeria, Kebbi", "AC": "Nigeria, Sokoto", "AD": "Pakistan",
+    "AE": "Tanzania", "AF": "Togo", "AG": "Uganda",
+    # No grantee specified (AH-BB)
+    "AH": "CAR", "AI": "Guinea-Bissau",
+    "AJ": "Nigeria, Abia", "AK": "Nigeria, Bauchi", "AL": "Nigeria, Borno",
+    "AM": "Nigeria, Enugu", "AN": "Nigeria, Gombe", "AO": "Nigeria, Imo",
+    "AP": "Nigeria, Jigawa", "AQ": "Nigeria, Kaduna", "AR": "Nigeria, Kano",
+    "AS": "Nigeria, Katsina", "AT": "Nigeria, Kogi", "AU": "Nigeria, Kwara",
+    "AV": "Nigeria, Niger", "AW": "Nigeria, Plateau", "AX": "Nigeria, Rivers",
+    "AY": "Nigeria, Yobe", "AZ": "Nigeria, Zamfara",
+    "BA": "Somalia", "BB": "South Sudan",
+}
+
+VAS_COLUMN_IMPLEMENTERS = {
+    # HKI columns
+    **{col: "Helen Keller International" for col in ["I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V"]},
+    # NI columns
+    **{col: "Nutrition International" for col in ["W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG"]},
+    # No grantee
+}
+
 
 # ============================================================================
 # Main
@@ -569,10 +615,206 @@ def run_smc():
     return output
 
 
+def compute_vas_country(loader: VASInputLoader, col: str):
+    """Compute full VAS CEA for a single country column."""
+    inputs = loader.load(col)
+
+    # Step 1: Supplementary sheets
+    cc = vas_calculate_counterfactual_coverage(inputs)
+    cm = vas_calculate_counterfactual_mortality(inputs)
+    ev = vas_calculate_external_validity(inputs, cm.deaths_vas_eligible)
+
+    # Step 2: Main CEA (pre-L&F)
+    pre_lf = vas_calculate_main_cea(
+        inputs,
+        counterfactual_cov=cc.counterfactual_coverage,
+        mortality_rate=cm.mortality_during_vas_period,
+        external_validity_adj=ev.final_external_validity_adj,
+    )
+
+    # Step 3: Leverage & Funging
+    lf_result = vas_calculate_leverage_funging(
+        inputs,
+        grantee_spending=pre_lf.grantee_spending,
+        ni_spending=pre_lf.ni_spending,
+        other_phil_spending=pre_lf.other_phil_spending,
+        govt_fin_spending=pre_lf.govt_financial_spending,
+        govt_ink_spending=pre_lf.govt_in_kind_spending,
+        upstream_spending=pre_lf.upstream_spending,
+        downstream_spending=pre_lf.downstream_spending,
+        uov_per_dollar_pre=pre_lf.uov_per_dollar_pre_adj,
+        total_grantee_adj=pre_lf.total_grantee_adj,
+        total_intervention_adj=pre_lf.total_intervention_adj,
+        intervention_adj_lives=pre_lf.intervention_adj_lives,
+        deaths_averted=pre_lf.deaths_averted,
+        value_per_death=inputs.value_weights.value_per_death_averted_u5,
+    )
+
+    # Step 4: Main CEA (with L&F)
+    result = vas_calculate_main_cea(
+        inputs,
+        counterfactual_cov=cc.counterfactual_coverage,
+        mortality_rate=cm.mortality_during_vas_period,
+        external_validity_adj=ev.final_external_validity_adj,
+        leverage_adj=lf_result.leverage_adj,
+        funging_adj=lf_result.funging_adj,
+        total_lf_adj=lf_result.total_lf_adj,
+        lf_adj_outputs=lf_result.lf_adj_outputs,
+        lf_adj_outcomes=lf_result.lf_adj_outcomes,
+    )
+
+    # Serialize inputs (using asdict for most, special handling for GranteeAdjustments)
+    inputs_dict = {
+        "country": inputs.country,
+        "column": inputs.column,
+        "cost": asdict(inputs.cost),
+        "mortality": asdict(inputs.mortality),
+        "vad_survey": asdict(inputs.vad_survey),
+        "vad_gbd": asdict(inputs.vad_gbd),
+        "vad_weighting": asdict(inputs.vad_weighting),
+        "external_validity_adj": asdict(inputs.external_validity_adj),
+        "counterfactual_coverage": asdict(inputs.counterfactual_coverage),
+        "outcomes": asdict(inputs.outcomes),
+        "value_weights": asdict(inputs.value_weights),
+        "leverage_funging": asdict(inputs.leverage_funging),
+        "is_cameroon": inputs.is_cameroon,
+        "is_nigeria": inputs.is_nigeria,
+    }
+
+    return {
+        "column": col,
+        "country": inputs.country,
+        "inputs": inputs_dict,
+        "supplementary": {
+            "counterfactual_coverage": asdict(cc),
+            "counterfactual_mortality": asdict(cm),
+            "external_validity": asdict(ev),
+            "leverage_funging": asdict(lf_result),
+        },
+        "results": asdict(result),
+    }
+
+
+def compute_vas_monte_carlo(col: str, country_name: str, ce_value: float) -> dict | None:
+    """Run VAS Monte Carlo simulation and OAT sensitivity for a country."""
+    import numpy as np
+    from src.models.vas.monte_carlo import _compute_simple_ce as vas_compute_simple_ce
+
+    try:
+        config = vas_build_mc_config(
+            VAS_CI_JSON, col, country_name,
+            n_simulations=MC_SIMULATIONS,
+            seed=MC_SEED,
+        )
+    except (ValueError, KeyError):
+        return None
+
+    if not config.parameters:
+        return None
+
+    mc_result = vas_run_simple_monte_carlo(config)
+
+    # Scale raw draws to CE-multiple space
+    bg_values = {spec.name: spec.best_guess for spec in config.parameters}
+    bg_outcomes = vas_compute_simple_ce(bg_values)
+    bg_raw = bg_outcomes.get("final_cost_effectiveness", 0)
+
+    if abs(bg_raw) < 1e-15 or not ce_value:
+        return None
+
+    scale = ce_value / bg_raw
+
+    draws = mc_result.outcome_draws["final_cost_effectiveness"]
+    scaled_draws = draws * scale
+    finite = scaled_draws[np.isfinite(scaled_draws)]
+    if len(finite) == 0:
+        return None
+
+    s = VASMCStats.from_array(finite)
+
+    counts, edges = np.histogram(finite, bins=HISTOGRAM_BINS)
+    histogram = [
+        {"x0": round(float(edges[i]), 4), "x1": round(float(edges[i + 1]), 4), "count": int(counts[i])}
+        for i in range(len(counts))
+    ]
+
+    sens_result = vas_run_sensitivity_analysis(config, mc_result)
+    tornado = []
+    for entry in sens_result.tornado_data():
+        tornado.append({
+            "parameter": entry["parameter"],
+            "p25_pct_delta": round(entry.get("p25_pct_delta", 0), 6),
+            "p75_pct_delta": round(entry.get("p75_pct_delta", 0), 6),
+            "p25_mean": round(entry.get("p25_mean", 0) * scale, 4),
+            "p75_mean": round(entry.get("p75_mean", 0) * scale, 4),
+        })
+
+    return _format_mc_result(mc_result, s, histogram, tornado)
+
+
+def run_vas():
+    """Pre-compute all VAS CEA results."""
+    print("\n" + "=" * 60)
+    print("VAS CEA")
+    print("=" * 60)
+
+    loader = VASInputLoader(VAS_DATA_DIR)
+
+    countries = []
+    errors = []
+
+    for col in VAS_ALL_COLUMNS:
+        display_name = VAS_COLUMN_DISPLAY_NAMES.get(col, f"Column {col}")
+        print(f"  {display_name} (col {col})...", end=" ")
+        try:
+            data = compute_vas_country(loader, col)
+            data["display_name"] = display_name
+            data["id"] = col.lower()
+            data["implementer"] = VAS_COLUMN_IMPLEMENTERS.get(col, "")
+
+            ce = data['results']['ce_multiple']
+            mc_data = compute_vas_monte_carlo(col, display_name, ce)
+            data["monte_carlo"] = mc_data
+
+            countries.append(data)
+            mc_info = ""
+            if mc_data:
+                mc_info = f" (MC: P5={mc_data['summary']['p5']:.2f}, P95={mc_data['summary']['p95']:.2f})"
+            print(f"CE = {ce:.3f}{mc_info}")
+        except Exception as e:
+            print(f"ERROR: {e}")
+            import traceback
+            traceback.print_exc()
+            errors.append({"column": col, "name": display_name, "error": str(e)})
+
+    countries.sort(key=lambda c: c["results"]["ce_multiple"] or 0, reverse=True)
+
+    output = {
+        "generated": TODAY,
+        "model": "VAS CEA",
+        "source": "cea-to-python",
+        "countries": countries,
+        "errors": errors,
+    }
+
+    output_path = OUTPUT_DIR / "vas_countries.json"
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+
+    print(f"\nWrote {len(countries)} VAS countries to {output_path}")
+    if errors:
+        print(f"Errors: {len(errors)}")
+        for e in errors:
+            print(f"  {e['name']}: {e['error']}")
+
+    return output
+
+
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     run_itn()
     run_smc()
+    run_vas()
     print("\nDone!")
 
 

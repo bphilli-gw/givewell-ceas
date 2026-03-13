@@ -10,6 +10,10 @@ import SMCOverview from './pages/smc/Overview';
 import SMCCountryDetail from './pages/smc/CountryDetail';
 import SMCSensitivity from './pages/smc/Sensitivity';
 import SMCCompare from './pages/smc/Compare';
+import VASOverview from './pages/vas/Overview';
+import VASCountryDetail from './pages/vas/CountryDetail';
+import VASSensitivity from './pages/vas/Sensitivity';
+import VASCompare from './pages/vas/Compare';
 
 export default function App() {
   return (
@@ -31,6 +35,12 @@ export default function App() {
           <Route path="smc/country/:id" element={<SMCCountryDetail />} />
           <Route path="smc/sensitivity" element={<SMCSensitivity />} />
           <Route path="smc/compare" element={<SMCCompare />} />
+
+          {/* VAS routes */}
+          <Route path="vas" element={<VASOverview />} />
+          <Route path="vas/country/:id" element={<VASCountryDetail />} />
+          <Route path="vas/sensitivity" element={<VASSensitivity />} />
+          <Route path="vas/compare" element={<VASCompare />} />
 
           {/* Legacy redirects */}
           <Route path="sensitivity" element={<Navigate to="/itn/sensitivity" replace />} />

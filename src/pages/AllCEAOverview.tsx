@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCountryData } from '../data/useCountryData';
 import { useSMCCountryData } from '../data/useSMCCountryData';
+import { useVASCountryData } from '../data/useVASCountryData';
 
 // ============================================================================
 // Types
@@ -17,7 +18,7 @@ interface MoralWeights {
 interface UnifiedRow {
   id: string;
   display_name: string;
-  cea_type: 'ITN' | 'SMC';
+  cea_type: 'ITN' | 'SMC' | 'VAS';
   route: string;
   orig_ce: number;
   uov_u5: number;
@@ -29,7 +30,7 @@ interface UnifiedRow {
 }
 
 interface CEAGroup {
-  type: 'ITN' | 'SMC';
+  type: 'ITN' | 'SMC' | 'VAS';
   label: string;
   description: string;
   color: string;
@@ -86,7 +87,7 @@ const SLIDER_CONFIG: {
   },
 ];
 
-const CEA_CONFIGS: { type: 'ITN' | 'SMC'; label: string; description: string; color: string }[] = [
+const CEA_CONFIGS: { type: 'ITN' | 'SMC' | 'VAS'; label: string; description: string; color: string }[] = [
   {
     type: 'ITN',
     label: 'Insecticide-Treated Nets',
@@ -98,6 +99,12 @@ const CEA_CONFIGS: { type: 'ITN' | 'SMC'; label: string; description: string; co
     label: 'Seasonal Malaria Chemoprevention',
     description: 'Preventive antimalarial treatment for children across 20 locations.',
     color: '#059669',
+  },
+  {
+    type: 'VAS',
+    label: 'Vitamin A Supplementation',
+    description: 'VAS delivered by HKI and Nutrition International across 46 locations.',
+    color: '#d97706',
   },
 ];
 
@@ -141,14 +148,15 @@ function fmtInt(n: number): string {
 export default function AllCEAOverview() {
   const { data: itnData, loading: itnLoading, error: itnError } = useCountryData();
   const { data: smcData, loading: smcLoading, error: smcError } = useSMCCountryData();
+  const { data: vasData, loading: vasLoading, error: vasError } = useVASCountryData();
   const navigate = useNavigate();
 
   const [weights, setWeights] = useState<MoralWeights>({ ...DEFAULT_WEIGHTS });
   const [hoveredDot, setHoveredDot] = useState<UnifiedRow | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const loading = itnLoading || smcLoading;
-  const error = itnError || smcError;
+  const loading = itnLoading || smcLoading || vasLoading;
+  const error = itnError || smcError || vasError;
 
   // Build unified rows
   const allRows: UnifiedRow[] = useMemo(() => {
@@ -183,8 +191,24 @@ export default function AllCEAOverview() {
         });
       }
     }
+    if (vasData) {
+      for (const c of vasData.countries) {
+        // VAS has no over-5 deaths; UoV decomposition: deaths + income
+        rows.push({
+          id: `vas-${c.id}`, display_name: c.display_name, cea_type: 'VAS',
+          route: `/vas/country/${c.id}`,
+          orig_ce: c.results.ce_multiple ?? 0,
+          uov_u5: c.results.uov_deaths_pre_adj ?? 0,
+          uov_o5: 0,
+          uov_income: c.results.uov_income_pre_adj ?? 0,
+          lives_saved: c.results.counterfactual_lives_saved ?? 0,
+          cost_per_life: c.results.cost_per_life_saved ?? 0,
+          mc: c.monte_carlo ? { p5: c.monte_carlo.summary.p5, p25: c.monte_carlo.summary.p25, p75: c.monte_carlo.summary.p75, p95: c.monte_carlo.summary.p95 } : null,
+        });
+      }
+    }
     return rows;
-  }, [itnData, smcData]);
+  }, [itnData, smcData, vasData]);
 
   // Group by CEA type
   const groups: CEAGroup[] = useMemo(() => {

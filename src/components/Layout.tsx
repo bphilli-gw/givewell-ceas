@@ -4,7 +4,8 @@ export default function Layout() {
   const { pathname } = useLocation();
   const isSMC = pathname.startsWith('/smc');
   const isITN = pathname.startsWith('/itn');
-  const prefix = isSMC ? '/smc' : isITN ? '/itn' : null;
+  const isVAS = pathname.startsWith('/vas');
+  const prefix = isSMC ? '/smc' : isITN ? '/itn' : isVAS ? '/vas' : null;
 
   return (
     <div className="app">
@@ -21,6 +22,9 @@ export default function Layout() {
             </NavLink>
             <NavLink to="/smc" className={({ isActive }) => `cea-tab ${isActive || isSMC ? 'active' : ''}`}>
               SMC
+            </NavLink>
+            <NavLink to="/vas" className={({ isActive }) => `cea-tab ${isActive || isVAS ? 'active' : ''}`}>
+              VAS
             </NavLink>
           </div>
 

@@ -64,9 +64,24 @@ from src.models.vas.monte_carlo import (
 )
 from src.models.vas.sensitivity import run_sensitivity_analysis as vas_run_sensitivity_analysis
 
+# --- NI imports ---
+from src.models.ni.input_loader import NIInputLoader, COLUMN_LOCATIONS as NI_COLUMN_LOCATIONS
+from src.models.ni.vaccine_efficacy import compute_vaccine_efficacy as ni_compute_vaccine_efficacy
+from src.models.ni.vaccine_coverage import compute_vaccine_coverage as ni_compute_vaccine_coverage
+from src.models.ni.disease_burden import (
+    compute_disease_burden as ni_compute_disease_burden,
+    GBDVaccineCoverage as NIGBDVaccineCoverage,
+)
+from src.models.ni.treatment_effect import compute_treatment_effect as ni_compute_treatment_effect
+from src.models.ni.indirect_effects import compute_indirect_effects as ni_compute_indirect_effects
+from src.models.ni.aggregation import compute_aggregation as ni_compute_aggregation
+from src.models.ni.main_cea import compute_main_cea as ni_compute_main_cea, finalize_main_cea as ni_finalize_main_cea
+from src.models.ni.leverage_funging import compute_leverage_funging as ni_compute_leverage_funging
+
 DATA_DIR = CEA_REPO / "data" / "extracted"
 SMC_DATA_DIR = CEA_REPO / "data" / "extracted" / "smc"
 VAS_DATA_DIR = CEA_REPO / "data" / "extracted" / "vas"
+NI_DATA_DIR = CEA_REPO / "data" / "extracted" / "ni"
 CI_JSON = DATA_DIR / "Confidence_intervals.json"
 SMC_CI_JSON = SMC_DATA_DIR / "Confidence_intervals.json"
 VAS_CI_JSON = VAS_DATA_DIR / "Confidence_Intervals.json"
@@ -810,11 +825,162 @@ def run_vas():
     return output
 
 
+# =============================================================================
+# NI (New Incentives) CEA
+# =============================================================================
+
+NI_GBD_ADJUSTMENT = 0.9517637613
+
+
+def compute_ni_state(loader: NIInputLoader, col: str):
+    """Compute full NI CEA for a single state column."""
+    inputs = loader.load(col)
+    ve = ni_compute_vaccine_efficacy(inputs.vaccine_efficacy)
+    vc = ni_compute_vaccine_coverage(
+        survey=inputs.coverage_survey,
+        mics=inputs.mics_coverage,
+        projection=inputs.coverage_projection,
+        ve=inputs.vaccine_efficacy,
+        gbd_adjustment=NI_GBD_ADJUSTMENT,
+    )
+    gbd_cov = NIGBDVaccineCoverage(
+        bcg=vc.gbd_bcg,
+        dtp_hib=vc.gbd_dtp_hib,
+        pcv=vc.gbd_pcv,
+        rotavirus=vc.gbd_rotavirus,
+        measles=vc.gbd_measles,
+    )
+    db = ni_compute_disease_burden(inputs, ve, gbd_cov)
+    te = ni_compute_treatment_effect(inputs, db)
+    ie = ni_compute_indirect_effects(inputs, vc, te, db)
+    agg = ni_compute_aggregation(inputs, ve, vc, db, ie)
+
+    # Phase 1: compute Main CEA (pre-leverage)
+    mcea = ni_compute_main_cea(inputs, agg, te, db, ie)
+
+    # Compute intervention partial for LeverageFunging
+    ia = inputs.intervention_adjustments
+    intervention_partial = (
+        ia.herd_protection
+        + ia.mortality_indirect
+        + ia.polio_outbreaks
+        + ia.serotype_replacement
+        + ia.increased_timeliness
+        + ia.post_program_effects
+    )
+
+    # Total DALYs = sum of per-child DALYs across age bands
+    total_dalys = (
+        mcea.daly_u5_total
+        + mcea.daly_u5_indirect_total
+        + mcea.daly_5to14_disc
+        + mcea.daly_15to49_disc
+        + mcea.daly_50to74_disc
+    )
+
+    # Phase 2: compute LeverageFunging
+    lf = ni_compute_leverage_funging(
+        inputs=inputs,
+        pre_leverage_ce=mcea.pre_leverage_ce,
+        grantee_adj_sum=mcea.grantee_adj_sum,
+        intervention_adj_sum=mcea.intervention_adj_sum,
+        outcome_children=mcea.outcome_children,
+        total_dalys=total_dalys,
+        intervention_partial=intervention_partial,
+        spending=mcea.spending,
+    )
+
+    # Phase 3: finalize Main CEA with leverage adjustment
+    mcea.overall_adj_all = (
+        (1.0 + mcea.grantee_adj_sum)
+        * (1.0 + intervention_partial)
+        * (1.0 + lf.total_displacement)
+        - 1.0
+    )
+    ni_finalize_main_cea(mcea, lf.total_displacement)
+
+    state_name, group = NI_COLUMN_LOCATIONS[col]
+
+    return {
+        "column": col,
+        "country": "Nigeria",
+        "state": state_name,
+        "group": group,
+        "inputs": {
+            "cost": asdict(inputs.cost),
+            "outcomes": asdict(inputs.outcomes),
+            "value_weights": asdict(inputs.value_weights),
+            "grantee_adjustments": asdict(inputs.grantee_adjustments),
+            "intervention_adjustments": asdict(inputs.intervention_adjustments),
+            "leverage_funging": asdict(inputs.leverage_funging),
+        },
+        "supplementary": {
+            "leverage_funging": asdict(lf),
+        },
+        "results": asdict(mcea),
+    }
+
+
+def run_ni():
+    """Pre-compute all NI CEA results."""
+    print("\n" + "=" * 60)
+    print("NI (New Incentives) CEA")
+    print("=" * 60)
+
+    loader = NIInputLoader(NI_DATA_DIR)
+
+    countries = []
+    errors = []
+
+    for col in sorted(NI_COLUMN_LOCATIONS.keys(), key=lambda c: (len(c), c)):
+        state_name, group = NI_COLUMN_LOCATIONS[col]
+        display_name = f"{state_name} ({group})"
+        print(f"  {state_name} (col {col})...", end=" ")
+        try:
+            data = compute_ni_state(loader, col)
+            data["display_name"] = display_name
+            data["id"] = col.lower()
+            data["implementer"] = "New Incentives"
+            data["monte_carlo"] = None  # No MC modules yet
+
+            ce = data["results"]["final_ce_multiple"]
+            countries.append(data)
+            print(f"CE = {ce:.3f}")
+        except Exception as e:
+            print(f"ERROR: {e}")
+            import traceback
+            traceback.print_exc()
+            errors.append({"column": col, "name": state_name, "error": str(e)})
+
+    countries.sort(key=lambda c: c["results"]["final_ce_multiple"] or 0, reverse=True)
+
+    output = {
+        "generated": TODAY,
+        "model": "NI CEA (New Incentives)",
+        "source": "cea-to-python",
+        "countries": countries,
+        "errors": errors,
+    }
+
+    output_path = OUTPUT_DIR / "ni_countries.json"
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+
+    print(f"\nWrote {len(countries)} NI states to {output_path}")
+    if errors:
+        print(f"Errors: {len(errors)}")
+        for e in errors:
+            print(f"  {e['name']}: {e['error']}")
+
+    return output
+
+
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     run_itn()
     run_smc()
     run_vas()
+    run_ni()
     print("\nDone!")
 
 

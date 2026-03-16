@@ -14,6 +14,10 @@ import VASOverview from './pages/vas/Overview';
 import VASCountryDetail from './pages/vas/CountryDetail';
 import VASSensitivity from './pages/vas/Sensitivity';
 import VASCompare from './pages/vas/Compare';
+import NIOverview from './pages/ni/Overview';
+import NICountryDetail from './pages/ni/CountryDetail';
+import NISensitivity from './pages/ni/Sensitivity';
+import NICompare from './pages/ni/Compare';
 
 export default function App() {
   return (
@@ -41,6 +45,12 @@ export default function App() {
           <Route path="vas/country/:id" element={<VASCountryDetail />} />
           <Route path="vas/sensitivity" element={<VASSensitivity />} />
           <Route path="vas/compare" element={<VASCompare />} />
+
+          {/* NI routes */}
+          <Route path="ni" element={<NIOverview />} />
+          <Route path="ni/country/:id" element={<NICountryDetail />} />
+          <Route path="ni/sensitivity" element={<NISensitivity />} />
+          <Route path="ni/compare" element={<NICompare />} />
 
           {/* Legacy redirects */}
           <Route path="sensitivity" element={<Navigate to="/itn/sensitivity" replace />} />

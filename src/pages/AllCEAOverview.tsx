@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCountryData } from '../data/useCountryData';
 import { useSMCCountryData } from '../data/useSMCCountryData';
 import { useVASCountryData } from '../data/useVASCountryData';
+import { useNICountryData } from '../data/useNICountryData';
 
 // ============================================================================
 // Types
@@ -18,7 +19,7 @@ interface MoralWeights {
 interface UnifiedRow {
   id: string;
   display_name: string;
-  cea_type: 'ITN' | 'SMC' | 'VAS';
+  cea_type: 'ITN' | 'SMC' | 'VAS' | 'NI';
   route: string;
   orig_ce: number;
   uov_u5: number;
@@ -30,7 +31,7 @@ interface UnifiedRow {
 }
 
 interface CEAGroup {
-  type: 'ITN' | 'SMC' | 'VAS';
+  type: 'ITN' | 'SMC' | 'VAS' | 'NI';
   label: string;
   description: string;
   color: string;
@@ -87,7 +88,7 @@ const SLIDER_CONFIG: {
   },
 ];
 
-const CEA_CONFIGS: { type: 'ITN' | 'SMC' | 'VAS'; label: string; description: string; color: string }[] = [
+const CEA_CONFIGS: { type: 'ITN' | 'SMC' | 'VAS' | 'NI'; label: string; description: string; color: string }[] = [
   {
     type: 'ITN',
     label: 'Insecticide-Treated Nets',
@@ -105,6 +106,12 @@ const CEA_CONFIGS: { type: 'ITN' | 'SMC' | 'VAS'; label: string; description: st
     label: 'Vitamin A Supplementation',
     description: 'VAS delivered by HKI and Nutrition International across 46 locations.',
     color: '#d97706',
+  },
+  {
+    type: 'NI',
+    label: 'New Incentives (Vaccination CCTs)',
+    description: 'Conditional cash transfers to increase infant vaccination across 40 Nigerian states.',
+    color: '#7c3aed',
   },
 ];
 
@@ -149,14 +156,15 @@ export default function AllCEAOverview() {
   const { data: itnData, loading: itnLoading, error: itnError } = useCountryData();
   const { data: smcData, loading: smcLoading, error: smcError } = useSMCCountryData();
   const { data: vasData, loading: vasLoading, error: vasError } = useVASCountryData();
+  const { data: niData, loading: niLoading, error: niError } = useNICountryData();
   const navigate = useNavigate();
 
   const [weights, setWeights] = useState<MoralWeights>({ ...DEFAULT_WEIGHTS });
   const [hoveredDot, setHoveredDot] = useState<UnifiedRow | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const loading = itnLoading || smcLoading || vasLoading;
-  const error = itnError || smcError || vasError;
+  const loading = itnLoading || smcLoading || vasLoading || niLoading;
+  const error = itnError || smcError || vasError || niError;
 
   // Build unified rows
   const allRows: UnifiedRow[] = useMemo(() => {
@@ -207,8 +215,39 @@ export default function AllCEAOverview() {
         });
       }
     }
+    if (niData) {
+      for (const c of niData.countries) {
+        // NI UoV decomposition: u5 deaths + over-5 deaths (5-14/15-49/50-74) + income + cash transfer
+        // For moral weight rescaling, map to u5/o5/income buckets
+        const r = c.results;
+        // Under-5 component: daly_u5 + daly_u5_indirect weighted by value_death_u5
+        const uov_u5_raw = (r.daly_u5_total + r.daly_u5_indirect_total) * (r.value_u5 || 0);
+        // Over-5 component: discounted DALYs for 5-14/15-49/50-74 weighted by their death values
+        const uov_o5_raw =
+          r.daly_5to14_disc * (c.inputs?.value_weights?.value_death_5to14 || 0) +
+          r.daly_15to49_disc * (c.inputs?.value_weights?.value_death_15to49 || 0) +
+          r.daly_50to74_disc * (c.inputs?.value_weights?.value_death_50to74 || 0);
+        // Income component: income_value + cash_transfer_value
+        const uov_income_raw = r.income_value + r.cash_transfer_value;
+        // Normalize to fraction of total CE
+        const rawTotal = uov_u5_raw + uov_o5_raw + uov_income_raw;
+        const ce = r.final_ce_multiple ?? 0;
+        const scale = rawTotal > 0 ? ce / rawTotal : 0;
+        rows.push({
+          id: `ni-${c.id}`, display_name: `${c.state} (NI)`, cea_type: 'NI',
+          route: `/ni/country/${c.id}`,
+          orig_ce: ce,
+          uov_u5: uov_u5_raw * scale,
+          uov_o5: uov_o5_raw * scale,
+          uov_income: uov_income_raw * scale,
+          lives_saved: r.adjusted_outcome_children ?? 0,
+          cost_per_life: r.cost_per_outcome_child ?? 0,
+          mc: null,
+        });
+      }
+    }
     return rows;
-  }, [itnData, smcData, vasData]);
+  }, [itnData, smcData, vasData, niData]);
 
   // Group by CEA type
   const groups: CEAGroup[] = useMemo(() => {

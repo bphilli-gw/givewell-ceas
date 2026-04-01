@@ -25,8 +25,8 @@ Expand the ITN Insecticide Resistance explorer pattern to all models. The goal: 
 
 Connect CEA numbers to the narrative context in GiveWell's published intervention reports and grant pages.
 
-- **Link key assumptions to report sections**: E.g., "mortality reduction = 0.55" links to the section of the report that justifies this estimate
-- **Evidence quality indicators**: Flag which parameters come from RCTs vs. observational data vs. expert judgment
+- ~~**Link key assumptions to report sections**: E.g., "mortality reduction = 0.55" links to the section of the report that justifies this estimate~~ — **Done.** All 4 models (ITN, SMC, VAS, NI) have clickable report links on calculation rows, linking to verified anchor IDs on givewell.org. Moral weight rows link to the shared moral weights page.
+- ~~**Evidence quality indicators**: Flag which parameters come from RCTs vs. observational data vs. expert judgment~~ — **Done.** Source badges already categorize parameters by type (academic, data, analysis, estimate, judgment, input, calculated) across ITN and SMC; now extended to VAS and NI.
 - **Report change tracking**: When a report is updated, surface which CEA parameters were affected
 - **Inline citations**: Hover over a parameter to see the source study, year, and confidence level
 

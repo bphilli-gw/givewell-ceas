@@ -43,7 +43,7 @@ Show what changed in a CEA between investigation rounds, so researchers can quic
 
 Current MC implementation varies by model (ITN/SMC/VAS have it, NI doesn't yet). Tighten up across the board.
 
-- **NI Monte Carlo**: Implement Phase 4 (mc_config.py, monte_carlo.py, sensitivity.py) for New Incentives — currently a placeholder on the site
+- ~~**NI Monte Carlo**: Implement Phase 4 (mc_config.py, monte_carlo.py, sensitivity.py) for New Incentives~~ — **Done.** 16 of 40 states have MC/sensitivity (those with CI data)
 - **Distribution review**: Audit which distributions we're using for each parameter — Beta for probabilities, Gamma for costs, Normal for adjustments. Are the shape parameters well-calibrated?
 - **Correlation structure**: Parameters aren't independent (e.g., mortality and morbidity estimates come from the same GBD source). Model key correlations rather than assuming independence
 - **Convergence diagnostics**: How many draws do we need? Show convergence plots so researchers can judge whether 10K draws is enough

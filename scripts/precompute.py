@@ -77,6 +77,12 @@ from src.models.ni.indirect_effects import compute_indirect_effects as ni_comput
 from src.models.ni.aggregation import compute_aggregation as ni_compute_aggregation
 from src.models.ni.main_cea import compute_main_cea as ni_compute_main_cea, finalize_main_cea as ni_finalize_main_cea
 from src.models.ni.leverage_funging import compute_leverage_funging as ni_compute_leverage_funging
+from src.models.ni.mc_config import build_mc_config as ni_build_mc_config
+from src.models.ni.monte_carlo import (
+    run_simple_monte_carlo as ni_run_simple_monte_carlo,
+    MCStats as NIMCStats,
+)
+from src.models.ni.sensitivity import run_sensitivity_analysis as ni_run_sensitivity_analysis
 
 DATA_DIR = CEA_REPO / "data" / "extracted"
 SMC_DATA_DIR = CEA_REPO / "data" / "extracted" / "smc"
@@ -85,6 +91,7 @@ NI_DATA_DIR = CEA_REPO / "data" / "extracted" / "ni"
 CI_JSON = DATA_DIR / "Confidence_intervals.json"
 SMC_CI_JSON = SMC_DATA_DIR / "Confidence_intervals.json"
 VAS_CI_JSON = VAS_DATA_DIR / "Confidence_Intervals.json"
+NI_CI_JSON = NI_DATA_DIR / "Confidence_intervals.json"
 MC_SIMULATIONS = 5000
 MC_SEED = 42
 HISTOGRAM_BINS = 40
@@ -921,6 +928,63 @@ def compute_ni_state(loader: NIInputLoader, col: str):
     }
 
 
+def compute_ni_monte_carlo(col: str, state_name: str, ce_value: float) -> dict | None:
+    """Run NI Monte Carlo simulation and OAT sensitivity for a state."""
+    import numpy as np
+    from src.models.ni.monte_carlo import _compute_simple_ce as ni_compute_simple_ce
+
+    try:
+        config = ni_build_mc_config(
+            NI_CI_JSON, col, state_name,
+            n_simulations=MC_SIMULATIONS,
+            seed=MC_SEED,
+        )
+    except (ValueError, KeyError):
+        return None
+
+    if not config.parameters:
+        return None
+
+    mc_result = ni_run_simple_monte_carlo(config)
+
+    # Scale raw draws to CE-multiple space
+    bg_values = {spec.name: spec.best_guess for spec in config.parameters}
+    bg_outcomes = ni_compute_simple_ce(bg_values)
+    bg_raw = bg_outcomes.get("final_cost_effectiveness", 0)
+
+    if abs(bg_raw) < 1e-15 or not ce_value:
+        return None
+
+    scale = ce_value / bg_raw
+
+    draws = mc_result.outcome_draws["final_cost_effectiveness"]
+    scaled_draws = draws * scale
+    finite = scaled_draws[np.isfinite(scaled_draws)]
+    if len(finite) == 0:
+        return None
+
+    s = NIMCStats.from_array(finite)
+
+    counts, edges = np.histogram(finite, bins=HISTOGRAM_BINS)
+    histogram = [
+        {"x0": round(float(edges[i]), 4), "x1": round(float(edges[i + 1]), 4), "count": int(counts[i])}
+        for i in range(len(counts))
+    ]
+
+    sens_result = ni_run_sensitivity_analysis(config, mc_result)
+    tornado = []
+    for entry in sens_result.tornado_data():
+        tornado.append({
+            "parameter": entry["parameter"],
+            "p25_pct_delta": round(entry.get("p25_pct_delta", 0), 6),
+            "p75_pct_delta": round(entry.get("p75_pct_delta", 0), 6),
+            "p25_mean": round(entry.get("p25_mean", 0) * scale, 4),
+            "p75_mean": round(entry.get("p75_mean", 0) * scale, 4),
+        })
+
+    return _format_mc_result(mc_result, s, histogram, tornado)
+
+
 def run_ni():
     """Pre-compute all NI CEA results."""
     print("\n" + "=" * 60)
@@ -941,11 +1005,16 @@ def run_ni():
             data["display_name"] = display_name
             data["id"] = col.lower()
             data["implementer"] = "New Incentives"
-            data["monte_carlo"] = None  # No MC modules yet
 
             ce = data["results"]["final_ce_multiple"]
+            mc_data = compute_ni_monte_carlo(col, state_name, ce)
+            data["monte_carlo"] = mc_data
+
             countries.append(data)
-            print(f"CE = {ce:.3f}")
+            mc_info = ""
+            if mc_data:
+                mc_info = f" (MC: P5={mc_data['summary']['p5']:.2f}, P95={mc_data['summary']['p95']:.2f})"
+            print(f"CE = {ce:.3f}{mc_info}")
         except Exception as e:
             print(f"ERROR: {e}")
             import traceback

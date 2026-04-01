@@ -1,0 +1,165 @@
+{
+  "Grant spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#How_much_does_the_program_cost",
+    "report_section": "How much does the program cost?"
+  },
+  "Cost per child enrolled": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#How_much_does_the_program_cost",
+    "report_section": "How much does the program cost?"
+  },
+  "Children enrolled": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Counterfactual vaccination rate": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "additional_sources": ["MICS 2021"],
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#What_is_the_impact_of_New_Incentives_program_on_vaccine_coverage",
+    "report_section": "What is the impact of New Incentives' program on vaccine coverage?"
+  },
+  "Unvaccinated proportion": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Overall treatment effect": {
+    "source": "IDinsight RCT",
+    "type": "academic",
+    "additional_sources": ["MICS 2021", "GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#What_is_the_impact_of_New_Incentives_program_on_vaccine_coverage",
+    "report_section": "What is the impact of New Incentives' program on vaccine coverage?"
+  },
+  "Adjusted treatment effect": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Coverage increase": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Outcome children": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "VPD total (adjusted)": {
+    "source": "GBD 2021",
+    "type": "data",
+    "additional_sources": ["IHME"],
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
+  },
+  "GBD adjustment": {
+    "source": "GBD 2021",
+    "type": "data"
+  },
+  "Incidence averted": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Unvaccinated probability": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "With indirect mortality": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
+  },
+  "DALYs (under-5)": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
+  },
+  "DALYs (under-5 indirect)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "DALYs (undiscounted)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "DALYs (discounted)": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Reduced_mortality_for_older_children_and_adults",
+    "report_section": "Reduced mortality for older children and adults"
+  },
+  "Income value": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Long-term_income_increases",
+    "report_section": "Long-term income increases"
+  },
+  "Cash transfer value": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Long-term_income_increases",
+    "report_section": "Long-term income increases"
+  },
+  "Total value of outcomes": {
+    "source": "GW value judgment",
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
+  },
+  "Pre-leverage CE ratio": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Pre-leverage CE multiple": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Grantee adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Additional_program_benefits_and_downsides",
+    "report_section": "Additional program benefits and downsides"
+  },
+  "Intervention adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#Additional_program_benefits_and_downsides",
+    "report_section": "Additional program benefits and downsides"
+  },
+  "Leverage/funging adjustment": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/new-incentives#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "Adjusted total value": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final CE ratio": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final CE multiple": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Adjusted outcome children": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per outcome child": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Adjusted DALYs": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per DALY": {
+    "source": "Calculated",
+    "type": "calculated"
+  }
+}

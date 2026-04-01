@@ -4,30 +4,29 @@ export interface SourceEntry {
   source: string;
   type: 'academic' | 'data' | 'analysis' | 'estimate' | 'judgment' | 'input' | 'calculated';
   additional_sources?: string[];
+  report_url?: string;
+  report_section?: string;
 }
 
 type SourceMap = Record<string, SourceEntry>;
 
-let cachedITN: SourceMap | null = null;
-let cachedSMC: SourceMap | null = null;
+const cache: Partial<Record<string, SourceMap>> = {};
 
-function useSourceMap(ceaType: 'itn' | 'smc') {
-  const cached = ceaType === 'itn' ? cachedITN : cachedSMC;
+function useSourceMap(ceaType: string) {
+  const cached = cache[ceaType] ?? null;
   const [sources, setSources] = useState<SourceMap | null>(cached);
 
   useEffect(() => {
     if (cached) return;
 
     const base = import.meta.env.BASE_URL;
-    const file = ceaType === 'itn' ? 'itn_sources.json' : 'smc_sources.json';
-    fetch(`${base}data/${file}`)
+    fetch(`${base}data/${ceaType}_sources.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((json: SourceMap) => {
-        if (ceaType === 'itn') cachedITN = json;
-        else cachedSMC = json;
+        cache[ceaType] = json;
         setSources(json);
       })
       .catch(() => {
@@ -50,4 +49,12 @@ export function useITNSources() {
 
 export function useSMCSources() {
   return useSourceMap('smc');
+}
+
+export function useVASSources() {
+  return useSourceMap('vas');
+}
+
+export function useNISources() {
+  return useSourceMap('ni');
 }

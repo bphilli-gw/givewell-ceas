@@ -1,0 +1,194 @@
+{
+  "Total spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_much_does_it_cost_to_reach_a_child_with_VAS",
+    "report_section": "How much does it cost to reach a child with VAS?"
+  },
+  "GiveWell (grantee) spending": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": ["GW analysis"]
+  },
+  "NI capsule spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Other philanthropic spending": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "Govt financial spending": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "Govt in-kind spending": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Upstream spending": {
+    "source": "Arbitrary value",
+    "type": "input"
+  },
+  "Downstream spending": {
+    "source": "Arbitrary value",
+    "type": "input"
+  },
+  "Cost per child-year": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_much_does_it_cost_to_reach_a_child_with_VAS",
+    "report_section": "How much does it cost to reach a child with VAS?"
+  },
+  "Upstream cost per child-year": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Children covered": {
+    "source": "Arbitrary value",
+    "type": "input",
+    "additional_sources": ["GW analysis"]
+  },
+  "Counterfactual coverage": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_many_children_would_have_received_VAS_without_campaigns",
+    "report_section": "How many children would have received VAS without campaigns?"
+  },
+  "Additional children": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "Implied mortality reduction": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
+  },
+  "Expected mortality reduction": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
+  },
+  "Mortality rate in absence of VAS": {
+    "source": "GBD 2021",
+    "type": "data",
+    "additional_sources": ["GW analysis"]
+  },
+  "Deaths averted": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
+  },
+  "VAS income-to-mortality ratio": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Long-term_income_increases",
+    "report_section": "Long-term income increases"
+  },
+  "UoV from deaths averted": {
+    "source": "GW value judgment",
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
+  },
+  "UoV from income": {
+    "source": "GW value judgment",
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
+  },
+  "UoV from deaths (pre-adj)": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV from income (pre-adj)": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "Total UoV (pre-adj)": {
+    "source": "GW value judgment",
+    "type": "judgment"
+  },
+  "UoV per dollar (pre-adj)": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "CE before adjustments": {
+    "source": "GW analysis",
+    "type": "analysis"
+  },
+  "% from mortality": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "% from income": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Grantee-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Additional_benefits",
+    "report_section": "Additional benefits"
+  },
+  "Intervention-level adjustment total": {
+    "source": "GW guesstimate",
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#Additional_benefits",
+    "report_section": "Additional benefits"
+  },
+  "Leverage adjustment": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "Funging adjustment": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "L&F total adjustment": {
+    "source": "GW analysis",
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/vitamin-A#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
+  },
+  "Total value after adjustments": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final UoV per dollar": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Final CE": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual people covered": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per counterfactual person": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Counterfactual lives saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  },
+  "Cost per life saved": {
+    "source": "Calculated",
+    "type": "calculated"
+  }
+}

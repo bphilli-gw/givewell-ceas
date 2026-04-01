@@ -2,35 +2,39 @@
   "Total spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_much_does_each_net_cost",
+    "report_section": "How much does each net cost?"
   },
   "GiveWell (grantee) spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Cost_to_purchase_each_net",
+    "report_section": "Cost to purchase each net"
   },
   "Other philanthropic spending": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_does_our_funding_affect_other_actors_spending",
+    "report_section": "How does our funding affect other actors' spending?"
   },
   "Government spending": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_does_our_funding_affect_other_actors_spending",
+    "report_section": "How does our funding affect other actors' spending?"
   },
   "Upstream spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Cost per net": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_much_does_each_net_cost",
+    "report_section": "How much does each net cost?"
   },
   "Upstream cost per net": {
     "source": "GW analysis",
@@ -39,9 +43,7 @@
   "Nets distributed": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Target population": {
     "source": "GBD 2021",
@@ -49,15 +51,21 @@
   },
   "People sleeping under nets": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#What_proportion_of_nets_are_used",
+    "report_section": "What proportion of nets are used?"
   },
   "Proportion sleeping under nets": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#What_proportion_of_nets_are_used",
+    "report_section": "What proportion of nets are used?"
   },
   "Under-5 sleeping proportion": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#What_proportion_of_nets_are_used",
+    "report_section": "What proportion of nets are used?"
   },
   "Proportion under 5": {
     "source": "GBD 2021",
@@ -78,51 +86,61 @@
   "Baseline coverage": {
     "source": "GW guesstimate",
     "type": "estimate",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_many_people_would_access_nets_from_other_sources",
+    "report_section": "How many people would access nets from other sources?"
   },
   "Coverage increase Year 1": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_long_does_each_net_provide_protection",
+    "report_section": "How long does each net provide protection?"
   },
   "Coverage increase Year 2": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_long_does_each_net_provide_protection",
+    "report_section": "How long does each net provide protection?"
   },
   "Coverage increase Year 3": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_long_does_each_net_provide_protection",
+    "report_section": "How long does each net provide protection?"
   },
   "Trial coverage difference": {
     "source": "GW guesstimate",
     "type": "estimate",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Net efficacy (per unit coverage)": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Mortality reduction Year 1": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Mortality reduction Year 2": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Mortality reduction Year 3": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Baseline mortality (adjusted)": {
     "source": "GBD 2021",
     "type": "data",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Net of SMC": {
     "source": "GW analysis",
@@ -146,15 +164,21 @@
   },
   "Avg mortality reduction (3yr)": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Deaths averted under 5": {
     "source": "Pryce et al. 2018",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Reduced_mortality_for_children_under_five",
+    "report_section": "Reduced mortality for children under five"
   },
   "Deaths averted 5+": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Impacts_on_mortality_for_older_children_and_adults",
+    "report_section": "Impacts on mortality for older children and adults"
   },
   "Cases averted under 5": {
     "source": "GBD 2021",
@@ -167,25 +191,33 @@
   "Income PV per case averted": {
     "source": "GW guesstimate",
     "type": "estimate",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Long-term_income_increases",
+    "report_section": "Long-term income increases"
   },
   "Total income value": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Long-term_income_increases",
+    "report_section": "Long-term income increases"
   },
   "UoV from under-5 deaths": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "UoV from 5+ deaths": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "UoV from income": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "Total UoV": {
     "source": "GW value judgment",
@@ -209,26 +241,34 @@
   },
   "Grantee-level adjustment total": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Supplemental_intervention_adjustments",
+    "report_section": "Supplemental intervention adjustments"
   },
   "Intervention-level adjustment total": {
     "source": "GW guesstimate",
     "type": "estimate",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Supplemental_intervention_adjustments",
+    "report_section": "Supplemental intervention adjustments"
   },
   "Leverage adjustment": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_does_our_funding_affect_other_actors_spending",
+    "report_section": "How does our funding affect other actors' spending?"
   },
   "Funging adjustment": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_does_our_funding_affect_other_actors_spending",
+    "report_section": "How does our funding affect other actors' spending?"
   },
   "L&F total": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#How_does_our_funding_affect_other_actors_spending",
+    "report_section": "How does our funding affect other actors' spending?"
   },
   "Total value after adjustments": {
     "source": "Calculated",

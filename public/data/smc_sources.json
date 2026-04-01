@@ -2,42 +2,44 @@
   "Total spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Cost_per_cycle_of_SMC_",
+    "report_section": "Cost per cycle of SMC"
   },
   "GiveWell (grantee) spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Cost_per_cycle_of_SMC_",
+    "report_section": "Cost per cycle of SMC"
   },
   "Other philanthropic spending": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
   },
   "Government spending": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
   },
   "Upstream spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Downstream spending": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Cost per cycle": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Cost_per_cycle_of_SMC_",
+    "report_section": "Cost per cycle of SMC"
   },
   "Cycles per year": {
     "source": "GW analysis",
@@ -54,20 +56,20 @@
   "Total children covered": {
     "source": "Arbitrary value",
     "type": "input",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"]
   },
   "Expected incidence reduction": {
     "source": "GW analysis",
     "type": "analysis",
-    "additional_sources": [
-      "GW guesstimate"
-    ]
+    "additional_sources": ["GW guesstimate"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
   },
   "Expected mortality reduction": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
   },
   "Annual mortality rate (3-59 months)": {
     "source": "GW analysis",
@@ -88,20 +90,22 @@
   "Deaths averted under 5": {
     "source": "GW analysis",
     "type": "analysis",
-    "additional_sources": [
-      "GW guesstimate"
-    ]
+    "additional_sources": ["GW guesstimate"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_young_children",
+    "report_section": "Reduced mortality for young children"
   },
   "Spillover incidence reduction": {
     "source": "Cisse et al. 2016",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_older_children_and_adults",
+    "report_section": "Reduced mortality for older children and adults"
   },
   "Spillover mortality reduction": {
     "source": "Cisse et al. 2016",
     "type": "academic",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_older_children_and_adults",
+    "report_section": "Reduced mortality for older children and adults"
   },
   "Older mortality per eligible": {
     "source": "GW analysis",
@@ -109,7 +113,9 @@
   },
   "Deaths averted over 5": {
     "source": "Cisse et al. 2016",
-    "type": "academic"
+    "type": "academic",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Reduced_mortality_for_older_children_and_adults",
+    "report_section": "Reduced mortality for older children and adults"
   },
   "Cases averted under 5": {
     "source": "GW analysis",
@@ -122,25 +128,33 @@
   "PV lifetime benefits per case": {
     "source": "GW guesstimate",
     "type": "estimate",
-    "additional_sources": [
-      "GW analysis"
-    ]
+    "additional_sources": ["GW analysis"],
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Long-term_income_increases",
+    "report_section": "Long-term income increases"
   },
   "Total PV income": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Long-term_income_increases",
+    "report_section": "Long-term income increases"
   },
   "UoV from under-5 deaths": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "UoV from over-5 deaths": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "UoV from income": {
     "source": "GW value judgment",
-    "type": "judgment"
+    "type": "judgment",
+    "report_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights",
+    "report_section": "Moral weights"
   },
   "Total UoV": {
     "source": "GW value judgment",
@@ -164,23 +178,33 @@
   },
   "Grantee-level adjustment total": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Additional_benefits_and_downsides",
+    "report_section": "Additional benefits and downsides"
   },
   "Intervention-level adjustment total": {
     "source": "GW guesstimate",
-    "type": "estimate"
+    "type": "estimate",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#Additional_benefits_and_downsides",
+    "report_section": "Additional benefits and downsides"
   },
   "Leverage adjustment": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
   },
   "Funging adjustment": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
   },
   "L&F overall adjustment": {
     "source": "GW analysis",
-    "type": "analysis"
+    "type": "analysis",
+    "report_url": "https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention#How_does_the_program_affect_other_actors_spending",
+    "report_section": "How does the program affect other actors' spending?"
   },
   "Total value after adjustments": {
     "source": "Calculated",

@@ -1116,6 +1116,25 @@ body {
   border: 1px solid #86efac;
 }
 
+.source-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.report-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary);
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  text-decoration: none;
+}
+
+.report-link:hover {
+  opacity: 1;
+}
+
 /* === Header layout adjustment for tabs + nav === */
 .header-inner {
   flex-wrap: wrap;

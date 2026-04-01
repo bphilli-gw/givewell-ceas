@@ -45,8 +45,23 @@ function SourceBadge({ source }: { source: SourceEntry }) {
     : source.source;
 
   return (
-    <span className={typeClass} title={title}>
-      {source.source}
+    <span className="source-badges">
+      <span className={typeClass} title={title}>
+        {source.source}
+      </span>
+      {source.report_url && (
+        <a
+          href={source.report_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="report-link"
+          title={source.report_section ? `See: ${source.report_section}` : 'View in intervention report'}
+        >
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 12H7V7h2v5zm0-6H7V4h2v2z"/>
+          </svg>
+        </a>
+      )}
     </span>
   );
 }

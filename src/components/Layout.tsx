@@ -41,7 +41,7 @@ export default function Layout() {
               <NavLink to={`${prefix}/sensitivity`}>Sensitivity</NavLink>
               <NavLink to={`${prefix}/compare`}>Compare</NavLink>
               {isITN && (
-                <NavLink to="/itn/explore/insecticide-resistance">Explore</NavLink>
+                <NavLink to="/itn/explore">Explore</NavLink>
               )}
             </nav>
           )}

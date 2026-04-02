@@ -5,7 +5,12 @@ import Overview from './pages/Overview';
 import CountryDetail from './pages/CountryDetail';
 import Sensitivity from './pages/Sensitivity';
 import Compare from './pages/Compare';
+import ExploreIndex from './pages/ExploreIndex';
 import ExploreIR from './pages/ExploreIR';
+import ExploreDurability from './pages/ExploreDurability';
+import ExploreCoverage from './pages/ExploreCoverage';
+import ExploreMortality from './pages/ExploreMortality';
+import ExploreLF from './pages/ExploreLF';
 import SMCOverview from './pages/smc/Overview';
 import SMCCountryDetail from './pages/smc/CountryDetail';
 import SMCSensitivity from './pages/smc/Sensitivity';
@@ -32,7 +37,12 @@ export default function App() {
           <Route path="itn/country/:id" element={<CountryDetail />} />
           <Route path="itn/sensitivity" element={<Sensitivity />} />
           <Route path="itn/compare" element={<Compare />} />
+          <Route path="itn/explore" element={<ExploreIndex />} />
+          <Route path="itn/explore/durability" element={<ExploreDurability />} />
           <Route path="itn/explore/insecticide-resistance" element={<ExploreIR />} />
+          <Route path="itn/explore/coverage" element={<ExploreCoverage />} />
+          <Route path="itn/explore/malaria-mortality" element={<ExploreMortality />} />
+          <Route path="itn/explore/leverage-funging" element={<ExploreLF />} />
 
           {/* SMC routes */}
           <Route path="smc" element={<SMCOverview />} />

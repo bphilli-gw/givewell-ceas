@@ -150,6 +150,41 @@ export interface DurabilityChemicalData {
   pyrethroid_remaining_std_year3: number;
 }
 
+export interface MortalityData {
+  mort_1_5_months: number;
+  mort_6_11_months: number;
+  mort_under5: number;
+  mort_under1: number;
+  mortality_rate_override: number | null;
+  all_cause_mort_adjustment: number;
+  malaria_share_adjustment: number;
+  rurality_adjustment: number;
+  subnational_mort_adjustment: number;
+  smc_geographic_proportion: number | null;
+  smc_deaths_averted: number;
+  smc_gbd_coverage: number;
+  gbd_mort_under5: number;
+  gbd_mort_all_ages: number;
+  global_over5_per_under5_gbd: number;
+  global_over5_per_under5_who: number;
+  weight_gbd_local: number;
+  weight_gbd_global: number;
+  weight_who: number;
+}
+
+export interface RoutineChannelData {
+  anc_coverage: number | null;
+  epi_coverage: number | null;
+  anc_epi_correlation: number;
+  routine_access_adjustment: number;
+  routine_vs_mass_coverage_adj: number;
+  other_vs_mass_coverage_adj: number;
+  child_cohort_routine_access: number;
+  other_sources_baseline: number | null;
+  other_sources_adjustment: number;
+  funding_gap_adjustment: number | null;
+}
+
 export interface ITNInputs {
   country: string;
   cost: CostData;
@@ -159,6 +194,8 @@ export interface ITNInputs {
   durability_chemical: DurabilityChemicalData;
   insecticide_resistance: InsecticideResistanceData;
   net_retention: NetRetentionData;
+  routine_channel: RoutineChannelData;
+  mortality: MortalityData;
   efficacy: EfficacyData;
   incidence: IncidenceData;
   economic: EconomicData;

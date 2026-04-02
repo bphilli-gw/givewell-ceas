@@ -10,10 +10,13 @@ import { useCountryData } from '../data/useCountryData';
 import FlowDiagram from '../components/FlowDiagram';
 import type { FlowTier } from '../components/FlowDiagram';
 import FlowNode from '../components/FlowNode';
+import { ITN_DURABILITY_GRAPH } from '../model/dependency-graph';
+import { useDependencyHighlight } from '../hooks/useDependencyHighlight';
 
 export default function ExploreDurability() {
   const { data, loading, error } = useCountryData();
   const [countryId, setCountryId] = useState<string>('');
+  const h = useDependencyHighlight(ITN_DURABILITY_GRAPH);
 
   const country = useMemo(() => {
     if (!data) return null;
@@ -67,6 +70,7 @@ export default function ExploreDurability() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('yr1_condition')}
             title="Year 1 condition"
             category="empirical"
             values={[
@@ -77,6 +81,7 @@ export default function ExploreDurability() {
             annotation="Proportion of nets in each damage state after 1 year"
           />
           <FlowNode
+            {...h.propsFor('yr2_condition')}
             title="Year 2 condition"
             category="empirical"
             values={[
@@ -86,6 +91,7 @@ export default function ExploreDurability() {
             ]}
           />
           <FlowNode
+            {...h.propsFor('yr3_condition')}
             title="Year 3 condition"
             category="empirical"
             values={[
@@ -95,6 +101,7 @@ export default function ExploreDurability() {
             ]}
           />
           <FlowNode
+            {...h.propsFor('effectiveness')}
             title="Effectiveness by condition"
             category="subjective"
             values={[
@@ -114,6 +121,7 @@ export default function ExploreDurability() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('physical_protection')}
             title="Physical protection by year"
             category="calculated"
             formula="SUMPRODUCT(condition × effectiveness)"
@@ -134,6 +142,7 @@ export default function ExploreDurability() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('pyrethroid_remaining')}
             title="Pyrethroid remaining"
             category="empirical"
             values={[
@@ -144,6 +153,7 @@ export default function ExploreDurability() {
             annotation="Fraction of original insecticide still active"
           />
           <FlowNode
+            {...h.propsFor('poly_coefficients')}
             title="Polynomial coefficients"
             category="subjective"
             values={[
@@ -155,6 +165,7 @@ export default function ExploreDurability() {
             annotation="Fitted from lab data on insecticide effectiveness vs. remaining concentration"
           />
           <FlowNode
+            {...h.propsFor('chemical_protection')}
             title="Chemical protection by year"
             category="calculated"
             formula="a(remaining)\u00B2 + b(remaining) + c"
@@ -174,6 +185,7 @@ export default function ExploreDurability() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('effect_shares')}
             title="Effect shares"
             category="subjective"
             values={[
@@ -193,6 +205,7 @@ export default function ExploreDurability() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('combined_protection')}
             title="Combined protection"
             category="output"
             formula="phys\u00D7share + chem\u00D7share + phys\u00D7chem\u00D7joint"
@@ -205,6 +218,7 @@ export default function ExploreDurability() {
             wide
           />
           <FlowNode
+            {...h.propsFor('attribution')}
             title="Year-by-year attribution"
             category="output"
             values={[

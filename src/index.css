@@ -917,6 +917,36 @@ body {
 .flow-node--output     { border-left-color: var(--cat-output);     background: var(--cat-output-light); }
 .flow-node--upstream   { border-left-color: var(--cat-upstream);   background: var(--cat-upstream-light); }
 
+/* Interactive dependency highlighting */
+.flow-node--interactive {
+  cursor: pointer;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.flow-node--interactive:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.flow-node--selected {
+  box-shadow: 0 0 0 2px var(--primary), var(--shadow-lg);
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+.flow-node--ancestor {
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-left-width: 6px;
+}
+
+.flow-node--dependent {
+  box-shadow: 0 0 0 2px #10b981;
+  border-left-width: 6px;
+}
+
+.flow-node--dimmed {
+  opacity: 0.3;
+}
+
 .flow-node__title {
   font-size: 13px;
   font-weight: 600;

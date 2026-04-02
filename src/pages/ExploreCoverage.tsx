@@ -10,10 +10,13 @@ import { useCountryData } from '../data/useCountryData';
 import FlowDiagram from '../components/FlowDiagram';
 import type { FlowTier } from '../components/FlowDiagram';
 import FlowNode from '../components/FlowNode';
+import { ITN_COVERAGE_GRAPH } from '../model/dependency-graph';
+import { useDependencyHighlight } from '../hooks/useDependencyHighlight';
 
 export default function ExploreCoverage() {
   const { data, loading, error } = useCountryData();
   const [countryId, setCountryId] = useState<string>('');
+  const h = useDependencyHighlight(ITN_COVERAGE_GRAPH);
 
   const country = useMemo(() => {
     if (!data) return null;
@@ -78,18 +81,21 @@ export default function ExploreCoverage() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('usage_rate')}
             title="Usage rate"
             category="empirical"
             values={[{ value: cov.nd.proportion_used, format: 'percent' }]}
             annotation="Proportion of distributed ITNs that are actually used"
           />
           <FlowNode
+            {...h.propsFor('u5_use_adj')}
             title="Under-5 use adjustment"
             category="subjective"
             values={[{ value: cov.nd.under5_use_adjustment, format: 'percent' }]}
             annotation="Under-5s use nets at higher rates than the general population"
           />
           <FlowNode
+            {...h.propsFor('u5_sleeping')}
             title="Under-5 sleeping proportion"
             category="calculated"
             formula="prop_sleeping \u00D7 (1 + under5_adj)"
@@ -97,6 +103,7 @@ export default function ExploreCoverage() {
             annotation="Effective proportion of under-5s sleeping under a distributed net"
           />
           <FlowNode
+            {...h.propsFor('retention')}
             title="Net retention by year"
             category="empirical"
             values={[
@@ -116,6 +123,7 @@ export default function ExploreCoverage() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('sleeping_by_year')}
             title="Sleeping proportion by year"
             category="calculated"
             formula="under5_sleeping \u00D7 retention"
@@ -127,6 +135,7 @@ export default function ExploreCoverage() {
             wide
           />
           <FlowNode
+            {...h.propsFor('combined_protection')}
             title="Combined protection (from Durability)"
             category="upstream"
             values={[
@@ -146,6 +155,7 @@ export default function ExploreCoverage() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('dist_coverage')}
             title="Distribution coverage by year"
             category="calculated"
             formula="sleeping_proportion \u00D7 combined_protection"
@@ -166,6 +176,7 @@ export default function ExploreCoverage() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('baseline')}
             title="Baseline effective coverage"
             category="calculated"
             formula="routine_coverage + other_sources"
@@ -173,12 +184,14 @@ export default function ExploreCoverage() {
             annotation="Effective ITN coverage in the absence of this distribution"
           />
           <FlowNode
+            {...h.propsFor('avg_retention')}
             title="Average retention"
             category="calculated"
             formula="mean(yr1, yr2, yr3 retention)"
             values={[{ value: cov.avgRetention, format: 'percent' }]}
           />
           <FlowNode
+            {...h.propsFor('avg_protection')}
             title="Average protection"
             category="calculated"
             formula="mean(yr1, yr2, yr3 combined protection)"
@@ -194,6 +207,7 @@ export default function ExploreCoverage() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('total_coverage')}
             title="Total effective coverage"
             category="output"
             formula="dist_coverage + (1 - sleeping) \u00D7 baseline"
@@ -206,6 +220,7 @@ export default function ExploreCoverage() {
             wide
           />
           <FlowNode
+            {...h.propsFor('coverage_increase')}
             title="Coverage increase"
             category="output"
             formula="total_coverage - baseline"

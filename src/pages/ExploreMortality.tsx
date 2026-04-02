@@ -10,10 +10,13 @@ import { useCountryData } from '../data/useCountryData';
 import FlowDiagram from '../components/FlowDiagram';
 import type { FlowTier } from '../components/FlowDiagram';
 import FlowNode from '../components/FlowNode';
+import { ITN_MORTALITY_GRAPH } from '../model/dependency-graph';
+import { useDependencyHighlight } from '../hooks/useDependencyHighlight';
 
 export default function ExploreMortality() {
   const { data, loading, error } = useCountryData();
   const [countryId, setCountryId] = useState<string>('');
+  const h = useDependencyHighlight(ITN_MORTALITY_GRAPH);
 
   const country = useMemo(() => {
     if (!data) return null;
@@ -70,27 +73,32 @@ export default function ExploreMortality() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('pop_u5')}
             title="Under-5 population"
             category="empirical"
             values={[{ value: mort.pop.under5, format: 'number' }]}
             annotation="GBD 2021 estimate"
           />
           <FlowNode
+            {...h.propsFor('pop_u1')}
             title="Under-1 population"
             category="empirical"
             values={[{ value: mort.pop.under1, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('pop_1_5mo')}
             title="Age 1-5 months"
             category="empirical"
             values={[{ value: mort.pop.age_1_5_months, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('pop_6_11mo')}
             title="Age 6-11 months"
             category="empirical"
             values={[{ value: mort.pop.age_6_11_months, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('pop_target')}
             title="Target: 1-59 months"
             category="calculated"
             formula="1-5mo + 6-11mo + (u5 - u1)"
@@ -105,27 +113,32 @@ export default function ExploreMortality() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('deaths_1_5mo')}
             title="Deaths: 1-5 months"
             category="empirical"
             values={[{ value: mort.m.mort_1_5_months, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('deaths_6_11mo')}
             title="Deaths: 6-11 months"
             category="empirical"
             values={[{ value: mort.m.mort_6_11_months, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('deaths_u5')}
             title="Deaths: under-5 total"
             category="empirical"
             values={[{ value: mort.m.mort_under5, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('deaths_1_59')}
             title="Deaths: 1-59 months"
             category="calculated"
             formula="1-5mo + 6-11mo + (u5 - u1)"
             values={[{ value: mort.deaths1_59, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('raw_rate')}
             title="Raw mortality rate"
             category="calculated"
             formula="deaths_1-59 / pop_1-59"
@@ -143,6 +156,7 @@ export default function ExploreMortality() {
         <>
           {mort.hasOverride && (
             <FlowNode
+              {...h.propsFor('subnational_override')}
               title="Subnational override"
               category="empirical"
               values={[{ value: mort.m.mortality_rate_override!, format: 'number' }]}
@@ -150,24 +164,28 @@ export default function ExploreMortality() {
             />
           )}
           <FlowNode
+            {...h.propsFor('all_cause_adj')}
             title="All-cause mortality adj"
             category="subjective"
             values={[{ value: mort.m.all_cause_mort_adjustment, format: 'percent' }]}
             annotation="Adjusts for overall mortality level differences"
           />
           <FlowNode
+            {...h.propsFor('malaria_share_adj')}
             title="Malaria share adj"
             category="subjective"
             values={[{ value: mort.m.malaria_share_adjustment, format: 'percent' }]}
             annotation="Adjusts for malaria's share of total deaths"
           />
           <FlowNode
+            {...h.propsFor('rurality_adj')}
             title="Rurality adj"
             category="subjective"
             values={[{ value: mort.m.rurality_adjustment, format: 'percent' }]}
             annotation="Rural areas typically have higher malaria burden"
           />
           <FlowNode
+            {...h.propsFor('subnational_adj')}
             title="Subnational adj"
             category="subjective"
             values={[{ value: mort.m.subnational_mort_adjustment, format: 'percent' }]}
@@ -183,6 +201,7 @@ export default function ExploreMortality() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('baseline_rate')}
             title="Baseline mortality rate"
             category="output"
             formula="base_rate \u00D7 (1+adj)\u2074"
@@ -200,24 +219,28 @@ export default function ExploreMortality() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('smc_geo')}
             title="SMC geographic overlap"
             category="empirical"
             values={[{ value: mort.smcProportion, format: 'percent' }]}
             annotation="Proportion of ITN distribution area also covered by SMC"
           />
           <FlowNode
+            {...h.propsFor('smc_averted')}
             title="SMC deaths averted"
             category="empirical"
             values={[{ value: mort.m.smc_deaths_averted }]}
             annotation="Per 1,000 children treated"
           />
           <FlowNode
+            {...h.propsFor('smc_gbd')}
             title="SMC in GBD"
             category="subjective"
             values={[{ value: mort.m.smc_gbd_coverage, format: 'percent' }]}
             annotation="Proportion of SMC effect already captured in GBD estimates"
           />
           <FlowNode
+            {...h.propsFor('smc_adj')}
             title="Net SMC adjustment"
             category="output"
             formula="overlap \u00D7 averted/1000 \u00D7 (1 - GBD_coverage)"
@@ -234,22 +257,26 @@ export default function ExploreMortality() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('gbd_all_ages')}
             title="GBD deaths: all ages"
             category="empirical"
             values={[{ value: mort.m.gbd_mort_all_ages, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('gbd_u5')}
             title="GBD deaths: under 5"
             category="empirical"
             values={[{ value: mort.m.gbd_mort_under5, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('local_ratio')}
             title="Local 5+/u5 ratio"
             category="calculated"
             formula="(all_ages - u5) / u5"
             values={[{ value: mort.ratioLocation }]}
           />
           <FlowNode
+            {...h.propsFor('source_weights')}
             title="Source weights"
             category="subjective"
             values={[
@@ -259,6 +286,7 @@ export default function ExploreMortality() {
             ]}
           />
           <FlowNode
+            {...h.propsFor('weighted_ratio')}
             title="Weighted 5+ ratio"
             category="output"
             formula="local\u00D7wt + global_gbd\u00D7wt + who\u00D7wt"

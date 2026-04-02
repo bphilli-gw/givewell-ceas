@@ -10,10 +10,13 @@ import { useCountryData } from '../data/useCountryData';
 import FlowDiagram from '../components/FlowDiagram';
 import type { FlowTier } from '../components/FlowDiagram';
 import FlowNode from '../components/FlowNode';
+import { ITN_LF_GRAPH } from '../model/dependency-graph';
+import { useDependencyHighlight } from '../hooks/useDependencyHighlight';
 
 export default function ExploreLF() {
   const { data, loading, error } = useCountryData();
   const [countryId, setCountryId] = useState<string>('');
+  const h = useDependencyHighlight(ITN_LF_GRAPH);
 
   const country = useMemo(() => {
     if (!data) return null;
@@ -106,24 +109,28 @@ export default function ExploreLF() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('prob_gov')}
             title="Government replaces"
             category="subjective"
             values={[{ value: lf.probGov, format: 'percent' }]}
             annotation="Domestic government fills the gap — reduces value (funging)"
           />
           <FlowNode
+            {...h.propsFor('prob_gf')}
             title="Global Fund replaces"
             category="subjective"
             values={[{ value: lf.probGF, format: 'percent' }]}
             annotation="Global Fund fills the gap — reduces value (funging)"
           />
           <FlowNode
+            {...h.propsFor('prob_upstream')}
             title="Upstream unchanged"
             category="subjective"
             values={[{ value: lf.probUpstream, format: 'percent' }]}
             annotation="Other upstream funders maintain spending — government savings are lost (leverage)"
           />
           <FlowNode
+            {...h.propsFor('prob_unfunded')}
             title="Goes unfunded"
             category="calculated"
             formula="1 - gov - GF - upstream"
@@ -139,11 +146,13 @@ export default function ExploreLF() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('grantee_spending')}
             title="GiveWell spending"
             category="empirical"
             values={[{ value: lf.granteeSpending, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('adj_rate')}
             title="Adjusted UoV/$ rate"
             category="upstream"
             formula="uov_per_dollar \u00D7 (1+grantee_adj) \u00D7 (1+intervention_adj)"
@@ -151,6 +160,7 @@ export default function ExploreLF() {
             annotation="From Main CEA — value per dollar after grantee and intervention adjustments"
           />
           <FlowNode
+            {...h.propsFor('cf_rates')}
             title="Counterfactual UoV/$"
             category="subjective"
             values={[
@@ -169,6 +179,7 @@ export default function ExploreLF() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('scenario_a')}
             title="A: Government replaces"
             category="calculated"
             values={[
@@ -179,6 +190,7 @@ export default function ExploreLF() {
             ]}
           />
           <FlowNode
+            {...h.propsFor('scenario_b')}
             title="B: Global Fund replaces"
             category="calculated"
             values={[
@@ -198,6 +210,7 @@ export default function ExploreLF() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('scenario_c')}
             title="C: Upstream unchanged"
             category="calculated"
             values={[
@@ -208,6 +221,7 @@ export default function ExploreLF() {
             annotation="Government stops co-funding but other philanthropic funders stay"
           />
           <FlowNode
+            {...h.propsFor('scenario_d')}
             title="D: Goes unfunded"
             category="calculated"
             values={[
@@ -227,12 +241,14 @@ export default function ExploreLF() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('baseline_value')}
             title="Baseline value"
             category="calculated"
             formula="grantee_spending \u00D7 adjusted_rate"
             values={[{ value: lf.baseline, format: 'number' }]}
           />
           <FlowNode
+            {...h.propsFor('leverage_adj')}
             title="Leverage adjustment"
             category="output"
             formula="(weighted_C + weighted_D) / baseline"
@@ -240,6 +256,7 @@ export default function ExploreLF() {
             annotation="Positive = GiveWell spending attracts additional co-funding"
           />
           <FlowNode
+            {...h.propsFor('funging_adj')}
             title="Funging adjustment"
             category="output"
             formula="(weighted_A + weighted_B) / baseline"
@@ -247,6 +264,7 @@ export default function ExploreLF() {
             annotation="Negative = some spending would have happened without GiveWell"
           />
           <FlowNode
+            {...h.propsFor('combined_lf')}
             title="Combined L&F"
             category="output"
             formula="leverage + funging"

@@ -3,6 +3,9 @@
  *
  * Displays a label, optional formula, one or more values, and a
  * color-coded left border indicating the data category.
+ *
+ * Supports interactive dependency highlighting: when a node is clicked,
+ * its ancestors and dependents are highlighted while unrelated nodes dim.
  */
 
 export type NodeCategory =
@@ -25,6 +28,12 @@ export interface FlowNodeProps {
   values: FlowNodeValue[];
   annotation?: string;        // small muted text below values
   wide?: boolean;             // take more horizontal space
+  // Interactive highlighting
+  nodeId?: string;
+  isSelected?: boolean;
+  isDimmed?: boolean;
+  highlightRole?: 'selected' | 'ancestor' | 'dependent';
+  onNodeClick?: (nodeId: string) => void;
 }
 
 function formatValue(v: FlowNodeValue): string {
@@ -54,9 +63,45 @@ export default function FlowNode({
   values,
   annotation,
   wide,
+  nodeId,
+  isSelected,
+  isDimmed,
+  highlightRole,
+  onNodeClick,
 }: FlowNodeProps) {
+  const interactive = nodeId != null && onNodeClick != null;
+
+  const className = [
+    'flow-node',
+    `flow-node--${category}`,
+    wide && 'flow-node--wide',
+    interactive && 'flow-node--interactive',
+    isSelected && 'flow-node--selected',
+    isDimmed && 'flow-node--dimmed',
+    highlightRole === 'ancestor' && 'flow-node--ancestor',
+    highlightRole === 'dependent' && 'flow-node--dependent',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div className={`flow-node flow-node--${category}${wide ? ' flow-node--wide' : ''}`}>
+    <div
+      className={className}
+      data-node-id={nodeId}
+      onClick={interactive ? () => onNodeClick(nodeId) : undefined}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onKeyDown={
+        interactive
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNodeClick(nodeId);
+              }
+            }
+          : undefined
+      }
+    >
       <div className="flow-node__title">{title}</div>
       {formula && <div className="flow-node__formula">{formula}</div>}
       <div className="flow-node__values">

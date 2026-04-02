@@ -14,10 +14,13 @@ import type { FlowTier } from '../components/FlowDiagram';
 import FlowNode from '../components/FlowNode';
 import type { Attribution } from '../model/insecticideResistance';
 import { calculateIR } from '../model/insecticideResistance';
+import { ITN_IR_GRAPH } from '../model/dependency-graph';
+import { useDependencyHighlight } from '../hooks/useDependencyHighlight';
 
 export default function ExploreIR() {
   const { data, loading, error } = useCountryData();
   const [countryId, setCountryId] = useState<string>('');
+  const h = useDependencyHighlight(ITN_IR_GRAPH);
 
   // Pick country (default to first)
   const country = useMemo(() => {
@@ -54,24 +57,28 @@ export default function ExploreIR() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('bioassay_rate')}
             title="Bioassay mortality rate"
             category="empirical"
             values={[{ value: irInputs.avg_pyrethroid_mortality_rate, format: 'percent' }]}
             annotation="Lab-measured mosquito mortality from pyrethroid exposure"
           />
           <FlowNode
+            {...h.propsFor('bioassay_year')}
             title="Bioassay year"
             category="empirical"
             values={[{ value: irInputs.avg_bioassay_year, format: 'year' }]}
             annotation="Average year bioassay data was collected"
           />
           <FlowNode
+            {...h.propsFor('dist_year')}
             title="Distribution year"
             category="empirical"
             values={[{ value: irInputs.expected_distribution_year, format: 'year' }]}
             annotation="Expected year nets will be distributed"
           />
           <FlowNode
+            {...h.propsFor('annual_change')}
             title="Annual mortality change"
             category="subjective"
             values={[{ value: irInputs.annual_mortality_change }]}
@@ -91,12 +98,14 @@ export default function ExploreIR() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('years_gap')}
             title="Years gap"
             category="calculated"
             formula="distribution_year - bioassay_year"
             values={[{ value: ir.years_gap }]}
           />
           <FlowNode
+            {...h.propsFor('projected_mortality')}
             title="Projected mortality"
             category="calculated"
             formula="bioassay_rate + (change x gap)"
@@ -104,6 +113,7 @@ export default function ExploreIR() {
             annotation="Estimated mosquito mortality at distribution time"
           />
           <FlowNode
+            {...h.propsFor('killing_power_loss')}
             title="Killing power loss"
             category="calculated"
             formula="projected_mortality - 1.0"
@@ -111,6 +121,7 @@ export default function ExploreIR() {
             annotation="How much killing effectiveness is lost vs. full susceptibility"
           />
           <FlowNode
+            {...h.propsFor('dur_attribution')}
             title="Durability attribution"
             category="upstream"
             values={[
@@ -135,6 +146,7 @@ export default function ExploreIR() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('standard_adj')}
             title="Standard ITN"
             category="calculated"
             formula="phys + chem(1+loss) + joint(1+loss) - 1"
@@ -146,6 +158,7 @@ export default function ExploreIR() {
             annotation={`${(irInputs.pct_standard_itns * 100).toFixed(0)}% of net mix`}
           />
           <FlowNode
+            {...h.propsFor('pbo_adj')}
             title="PBO Net"
             category="calculated"
             formula="std x (1 - (1-residual)(1+washout))"
@@ -157,6 +170,7 @@ export default function ExploreIR() {
             annotation={`Residual resistance: ${(ir.residual_resistance * 100).toFixed(1)}% | ${(irInputs.pct_pbo_nets * 100).toFixed(0)}% of net mix`}
           />
           <FlowNode
+            {...h.propsFor('chlorfenapyr_adj')}
             title="Chlorfenapyr Net"
             category="subjective"
             formula="Fixed adjustment (not resistance-dependent)"
@@ -168,6 +182,7 @@ export default function ExploreIR() {
             annotation={`GiveWell assumption | ${(irInputs.pct_chlorfenapyr_nets * 100).toFixed(0)}% of net mix`}
           />
           <FlowNode
+            {...h.propsFor('dual_ai_adj')}
             title="Dual AI Net"
             category="calculated"
             formula="Same as standard (pyrethroid base)"
@@ -191,6 +206,7 @@ export default function ExploreIR() {
       nodes: (
         <>
           <FlowNode
+            {...h.propsFor('net_mix')}
             title="Net mix"
             category="empirical"
             values={[
@@ -202,6 +218,7 @@ export default function ExploreIR() {
             annotation="Proportions of each net type in planned distribution"
           />
           <FlowNode
+            {...h.propsFor('weighted_adj')}
             title="Weighted resistance adjustment"
             category="output"
             formula="SUMPRODUCT(net_adj x proportion)"

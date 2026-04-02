@@ -40,8 +40,8 @@ export default function Layout() {
               </NavLink>
               <NavLink to={`${prefix}/sensitivity`}>Sensitivity</NavLink>
               <NavLink to={`${prefix}/compare`}>Compare</NavLink>
-              {isITN && (
-                <NavLink to="/itn/explore">Explore</NavLink>
+              {prefix && (
+                <NavLink to={`${prefix}/explore`}>Explore</NavLink>
               )}
             </nav>
           )}

@@ -11,14 +11,27 @@ import ExploreDurability from './pages/ExploreDurability';
 import ExploreCoverage from './pages/ExploreCoverage';
 import ExploreMortality from './pages/ExploreMortality';
 import ExploreLF from './pages/ExploreLF';
+import SMCExploreIndex from './pages/smc/ExploreIndex';
+import SMCExploreCM from './pages/smc/ExploreCM';
+import SMCExploreLF from './pages/smc/ExploreLF';
 import SMCOverview from './pages/smc/Overview';
 import SMCCountryDetail from './pages/smc/CountryDetail';
 import SMCSensitivity from './pages/smc/Sensitivity';
 import SMCCompare from './pages/smc/Compare';
+import VASExploreIndex from './pages/vas/ExploreIndex';
+import VASExploreCoverage from './pages/vas/ExploreCoverage';
+import VASExploreMortality from './pages/vas/ExploreMortality';
+import VASExploreEV from './pages/vas/ExploreEV';
+import VASExploreLF from './pages/vas/ExploreLF';
 import VASOverview from './pages/vas/Overview';
 import VASCountryDetail from './pages/vas/CountryDetail';
 import VASSensitivity from './pages/vas/Sensitivity';
 import VASCompare from './pages/vas/Compare';
+import NIExploreIndex from './pages/ni/ExploreIndex';
+import NIExploreVaccinePipeline from './pages/ni/ExploreVaccinePipeline';
+import NIExploreMortality from './pages/ni/ExploreMortality';
+import NIExploreIncome from './pages/ni/ExploreIncome';
+import NIExploreLF from './pages/ni/ExploreLF';
 import NIOverview from './pages/ni/Overview';
 import NICountryDetail from './pages/ni/CountryDetail';
 import NISensitivity from './pages/ni/Sensitivity';
@@ -49,18 +62,31 @@ export default function App() {
           <Route path="smc/country/:id" element={<SMCCountryDetail />} />
           <Route path="smc/sensitivity" element={<SMCSensitivity />} />
           <Route path="smc/compare" element={<SMCCompare />} />
+          <Route path="smc/explore" element={<SMCExploreIndex />} />
+          <Route path="smc/explore/counterfactual-malaria" element={<SMCExploreCM />} />
+          <Route path="smc/explore/leverage-funging" element={<SMCExploreLF />} />
 
           {/* VAS routes */}
           <Route path="vas" element={<VASOverview />} />
           <Route path="vas/country/:id" element={<VASCountryDetail />} />
           <Route path="vas/sensitivity" element={<VASSensitivity />} />
           <Route path="vas/compare" element={<VASCompare />} />
+          <Route path="vas/explore" element={<VASExploreIndex />} />
+          <Route path="vas/explore/counterfactual-coverage" element={<VASExploreCoverage />} />
+          <Route path="vas/explore/counterfactual-mortality" element={<VASExploreMortality />} />
+          <Route path="vas/explore/external-validity" element={<VASExploreEV />} />
+          <Route path="vas/explore/leverage-funging" element={<VASExploreLF />} />
 
           {/* NI routes */}
           <Route path="ni" element={<NIOverview />} />
           <Route path="ni/country/:id" element={<NICountryDetail />} />
           <Route path="ni/sensitivity" element={<NISensitivity />} />
           <Route path="ni/compare" element={<NICompare />} />
+          <Route path="ni/explore" element={<NIExploreIndex />} />
+          <Route path="ni/explore/vaccine-pipeline" element={<NIExploreVaccinePipeline />} />
+          <Route path="ni/explore/mortality" element={<NIExploreMortality />} />
+          <Route path="ni/explore/income-transfers" element={<NIExploreIncome />} />
+          <Route path="ni/explore/leverage-funging" element={<NIExploreLF />} />
 
           {/* Legacy redirects */}
           <Route path="sensitivity" element={<Navigate to="/itn/sensitivity" replace />} />

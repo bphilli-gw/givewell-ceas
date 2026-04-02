@@ -16,10 +16,10 @@ Current coverage: ITN (26 locations), SMC (20), VAS (46), NI (40).
 
 Expand the ITN Insecticide Resistance explorer pattern to all models. The goal: researchers and external reviewers can trace any output back through the full formula chain.
 
-- **Step-through calculation view**: Click on any result to see the formula, inputs, and intermediate values that produced it — like a debugger for the CEA
+- ~~**Step-through calculation view**: Click on any result to see the formula, inputs, and intermediate values that produced it — like a debugger for the CEA~~ — **Done.** All 4 models have Explore pages with tiered flow diagrams showing formulas, intermediate values, and annotations. ITN: 5 modules (Durability, IR, Coverage, Malaria Mortality, L&F). SMC: 2 modules (Counterfactual Malaria, L&F). VAS: 4 modules (Coverage, Mortality, External Validity, L&F). NI: 4 conceptual modules (Vaccine Pipeline, Age-Band Mortality, Income & Transfers, L&F).
 - **Formula annotations**: Show the original spreadsheet cell reference alongside the Python formula so reviewers can cross-check
 - **Dependency highlighting**: Select a parameter and see which outputs it affects (forward) or which inputs feed into a result (backward)
-- **Plain-language summaries**: Each calculation section gets a one-paragraph explanation of what it represents and why it matters
+- ~~**Plain-language summaries**: Each calculation section gets a one-paragraph explanation of what it represents and why it matters~~ — **Done.** Every explore module has an intro paragraph and per-tier annotations explaining what the calculation does and why it matters.
 
 ## 3. Integration with intervention reports
 

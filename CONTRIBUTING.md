@@ -1,6 +1,6 @@
 # Contributing
 
-This is a shared repo. You and at least one other person edit it. To keep things smooth, your Claude does the git — you just tell it what you're doing.
+This file is the canonical guide for collaborating in this repo — for both humans driving git through Claude and for Claude itself. Claude reads it at session start and follows the rules; humans can use it as a cheat sheet for what to ask Claude to do.
 
 ## Maintainer
 
@@ -8,7 +8,35 @@ This is a shared repo. You and at least one other person edit it. To keep things
 
 Slack Brendan with questions; open a GitHub issue for proposed changes.
 
-## What to tell your Claude
+## Workflow
+
+### Start of session
+
+Pull the latest from the default branch (`git pull --rebase`). For non-trivial work, create a branch named after the task (`add-data-source`, `fix-rendering-bug`), not the contributor.
+
+### During the work
+
+Commit at natural checkpoints with imperative messages ("Add data source"). Push the branch early (`git push -u origin <branch>`) so collaborators can see WIP.
+
+### End of session
+
+Run `/done`. It commits WIP, pushes the branch, and opens or updates a PR. Don't leave work abandoned in a closed Claude window.
+
+### Reviewing
+
+Open a PR against the default branch with what changed, why, and how to verify. PRs auto-request review from CODEOWNERS. Ask Claude to summarize the diff in plain English if you didn't author the work.
+
+### Merging (owner only)
+
+**Squash and merge**, then **delete the branch.** Keeps the default branch clean and prevents stale-branch sprawl. If you're not the owner, tag Brendan for review instead of self-merging.
+
+Exception: a long-lived branch with several genuinely distinct logical changes can be merged non-squashed. Default is squash.
+
+### Conflicts
+
+If `git pull --rebase` or merging produces conflicts, stop. Explain the conflicting hunks in plain English; let Brendan decide. Don't auto-resolve.
+
+## Cheat sheet (what to tell your Claude)
 
 | Stage | Say to Claude |
 |---|---|
@@ -16,7 +44,7 @@ Slack Brendan with questions; open a GitHub issue for proposed changes.
 | Mid-work | "Commit my changes." |
 | Done for the session | "Run `/done`." (Or: "Push the branch and open a PR.") |
 | Reviewing | "Summarize the changes in this PR in plain English." |
-| Merging (owner only) | "Merge this PR." (Otherwise: "Tag Brendan for review.") |
+| Merging (owner only) | "Squash, merge, and delete the branch." (Otherwise: "Tag Brendan for review.") |
 
 ## Coordinate before big work
 
@@ -24,12 +52,14 @@ For schema changes, new features, or anything that touches a shared interface �
 
 ## Don't
 
-- Commit secrets (API keys, tokens). Use `.env` files (gitignored).
+- Commit secrets (API keys, tokens, `.env` contents). If one's already in history, flag for rotation.
 - Commit large data files or generated outputs. Add patterns to `.gitignore`.
 - *Edit* Excel/Word/PowerPoint in the repo — git can't merge them, so one person's changes disappear. Reference-only copies are fine; collaborative editing is not. Use markdown/CSV/YAML for live work.
+- Force-push (`--force`, `--force-with-lease`) unless Brendan explicitly requests it.
+- Skip hooks (`--no-verify`) unless Brendan explicitly requests it.
+- Commit directly to the default branch.
 - Merge your own PR if you're not the owner.
-- Force-push.
 
 ## If something looks weird
 
-Ask your Claude to explain before doing anything. Or ping Brendan.
+Ask Claude to explain before doing anything destructive. Or ping Brendan.
